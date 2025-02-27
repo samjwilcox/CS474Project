@@ -1,0 +1,45 @@
+# TSL for GraphHopper application
+
+Parameters:
+	Command:
+		route.		 [property Route]
+
+	Routing Profile:
+		car. 				[if Route]
+		bike. 				[if Route]
+		invalid profile. 	[error]
+
+	Input Coordinates:
+		start and end points. 		[if Route]
+		multiple waypoints.	 		[if Route]
+		invalid coordinates. 		[error]
+
+	Graph Data (OSM or Custom Graph):
+		valid OSM data. 		[if Route]
+		missing graph data. 	[error]
+		corrupted graph data. 	[error]
+
+	Routing Options:
+		fastest route. 					[if Route]
+		alternative routes enabled. 	[if Route]
+		avoid highways. 				[if Route]
+
+	Output Format:
+		JSON output. 			[if Route]
+		unsupported format. 	[error]
+
+	Edge Cases:
+		disconnected road network. 					[error]
+		restricted access (e.g., private roads). 	[error]
+		routing across different time zones. 		[if Route]
+		handling one-way streets. 					[if Route]
+		routing over bridges/tunnels. 				[if Route]
+	Performance Testing:
+		small dataset (city-level). 				[if Route]
+		large dataset (country-level). 				[if Route]
+		high concurrency load. 						[if Route]
+	Conditions:
+		valid input. 				[if Route]
+		invalid input. 				[error]
+		partial route available. 	[error]
+		no route found. 			[error]

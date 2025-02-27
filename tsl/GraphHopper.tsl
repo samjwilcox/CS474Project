@@ -1,0 +1,2200 @@
+
+Test Case 1  		<error>
+   Routing Profile :  invalid profile
+
+
+Test Case 2  		<error>
+   Input Coordinates :  invalid coordinates
+
+
+Test Case 3  		<error>
+   Graph Data (OSM or Custom Graph) :  missing graph data
+
+
+Test Case 4  		<error>
+   Graph Data (OSM or Custom Graph) :  corrupted graph data
+
+
+Test Case 5  		<error>
+   Output Format :  unsupported format
+
+
+Test Case 6  		<error>
+   Edge Cases :  disconnected road network
+
+
+Test Case 7  		<error>
+   Edge Cases :  , private roads)
+
+
+Test Case 8  		<error>
+   Conditions :  invalid input
+
+
+Test Case 9  		<error>
+   Conditions :  partial route available
+
+
+Test Case 10 		<error>
+   Conditions :  no route found
+
+
+Test Case 11 		(Key = 1.1.1.1.1.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 12 		(Key = 1.1.1.1.1.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 13 		(Key = 1.1.1.1.1.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 14 		(Key = 1.1.1.1.1.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 15 		(Key = 1.1.1.1.1.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 16 		(Key = 1.1.1.1.1.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 17 		(Key = 1.1.1.1.1.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 18 		(Key = 1.1.1.1.1.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 19 		(Key = 1.1.1.1.1.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 20 		(Key = 1.1.1.1.1.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 21 		(Key = 1.1.1.1.1.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 22 		(Key = 1.1.1.1.1.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 23 		(Key = 1.1.1.1.1.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 24 		(Key = 1.1.1.1.1.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 25 		(Key = 1.1.1.1.1.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 26 		(Key = 1.1.1.1.2.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 27 		(Key = 1.1.1.1.2.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 28 		(Key = 1.1.1.1.2.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 29 		(Key = 1.1.1.1.2.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 30 		(Key = 1.1.1.1.2.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 31 		(Key = 1.1.1.1.2.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 32 		(Key = 1.1.1.1.2.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 33 		(Key = 1.1.1.1.2.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 34 		(Key = 1.1.1.1.2.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 35 		(Key = 1.1.1.1.2.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 36 		(Key = 1.1.1.1.2.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 37 		(Key = 1.1.1.1.2.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 38 		(Key = 1.1.1.1.2.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 39 		(Key = 1.1.1.1.2.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 40 		(Key = 1.1.1.1.2.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 41 		(Key = 1.1.1.1.3.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 42 		(Key = 1.1.1.1.3.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 43 		(Key = 1.1.1.1.3.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 44 		(Key = 1.1.1.1.3.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 45 		(Key = 1.1.1.1.3.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 46 		(Key = 1.1.1.1.3.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 47 		(Key = 1.1.1.1.3.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 48 		(Key = 1.1.1.1.3.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 49 		(Key = 1.1.1.1.3.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 50 		(Key = 1.1.1.1.3.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 51 		(Key = 1.1.1.1.3.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 52 		(Key = 1.1.1.1.3.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 53 		(Key = 1.1.1.1.3.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 54 		(Key = 1.1.1.1.3.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 55 		(Key = 1.1.1.1.3.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 56 		(Key = 1.1.2.1.1.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 57 		(Key = 1.1.2.1.1.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 58 		(Key = 1.1.2.1.1.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 59 		(Key = 1.1.2.1.1.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 60 		(Key = 1.1.2.1.1.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 61 		(Key = 1.1.2.1.1.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 62 		(Key = 1.1.2.1.1.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 63 		(Key = 1.1.2.1.1.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 64 		(Key = 1.1.2.1.1.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 65 		(Key = 1.1.2.1.1.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 66 		(Key = 1.1.2.1.1.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 67 		(Key = 1.1.2.1.1.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 68 		(Key = 1.1.2.1.1.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 69 		(Key = 1.1.2.1.1.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 70 		(Key = 1.1.2.1.1.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 71 		(Key = 1.1.2.1.2.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 72 		(Key = 1.1.2.1.2.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 73 		(Key = 1.1.2.1.2.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 74 		(Key = 1.1.2.1.2.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 75 		(Key = 1.1.2.1.2.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 76 		(Key = 1.1.2.1.2.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 77 		(Key = 1.1.2.1.2.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 78 		(Key = 1.1.2.1.2.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 79 		(Key = 1.1.2.1.2.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 80 		(Key = 1.1.2.1.2.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 81 		(Key = 1.1.2.1.2.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 82 		(Key = 1.1.2.1.2.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 83 		(Key = 1.1.2.1.2.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 84 		(Key = 1.1.2.1.2.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 85 		(Key = 1.1.2.1.2.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 86 		(Key = 1.1.2.1.3.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 87 		(Key = 1.1.2.1.3.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 88 		(Key = 1.1.2.1.3.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 89 		(Key = 1.1.2.1.3.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 90 		(Key = 1.1.2.1.3.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 91 		(Key = 1.1.2.1.3.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 92 		(Key = 1.1.2.1.3.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 93 		(Key = 1.1.2.1.3.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 94 		(Key = 1.1.2.1.3.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 95 		(Key = 1.1.2.1.3.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 96 		(Key = 1.1.2.1.3.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 97 		(Key = 1.1.2.1.3.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 98 		(Key = 1.1.2.1.3.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 99 		(Key = 1.1.2.1.3.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 100		(Key = 1.1.2.1.3.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  car
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 101		(Key = 1.2.1.1.1.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 102		(Key = 1.2.1.1.1.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 103		(Key = 1.2.1.1.1.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 104		(Key = 1.2.1.1.1.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 105		(Key = 1.2.1.1.1.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 106		(Key = 1.2.1.1.1.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 107		(Key = 1.2.1.1.1.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 108		(Key = 1.2.1.1.1.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 109		(Key = 1.2.1.1.1.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 110		(Key = 1.2.1.1.1.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 111		(Key = 1.2.1.1.1.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 112		(Key = 1.2.1.1.1.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 113		(Key = 1.2.1.1.1.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 114		(Key = 1.2.1.1.1.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 115		(Key = 1.2.1.1.1.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 116		(Key = 1.2.1.1.2.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 117		(Key = 1.2.1.1.2.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 118		(Key = 1.2.1.1.2.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 119		(Key = 1.2.1.1.2.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 120		(Key = 1.2.1.1.2.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 121		(Key = 1.2.1.1.2.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 122		(Key = 1.2.1.1.2.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 123		(Key = 1.2.1.1.2.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 124		(Key = 1.2.1.1.2.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 125		(Key = 1.2.1.1.2.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 126		(Key = 1.2.1.1.2.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 127		(Key = 1.2.1.1.2.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 128		(Key = 1.2.1.1.2.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 129		(Key = 1.2.1.1.2.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 130		(Key = 1.2.1.1.2.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 131		(Key = 1.2.1.1.3.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 132		(Key = 1.2.1.1.3.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 133		(Key = 1.2.1.1.3.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 134		(Key = 1.2.1.1.3.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 135		(Key = 1.2.1.1.3.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 136		(Key = 1.2.1.1.3.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 137		(Key = 1.2.1.1.3.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 138		(Key = 1.2.1.1.3.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 139		(Key = 1.2.1.1.3.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 140		(Key = 1.2.1.1.3.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 141		(Key = 1.2.1.1.3.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 142		(Key = 1.2.1.1.3.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 143		(Key = 1.2.1.1.3.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 144		(Key = 1.2.1.1.3.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 145		(Key = 1.2.1.1.3.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  start and end points
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 146		(Key = 1.2.2.1.1.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 147		(Key = 1.2.2.1.1.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 148		(Key = 1.2.2.1.1.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 149		(Key = 1.2.2.1.1.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 150		(Key = 1.2.2.1.1.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 151		(Key = 1.2.2.1.1.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 152		(Key = 1.2.2.1.1.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 153		(Key = 1.2.2.1.1.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 154		(Key = 1.2.2.1.1.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 155		(Key = 1.2.2.1.1.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 156		(Key = 1.2.2.1.1.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 157		(Key = 1.2.2.1.1.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 158		(Key = 1.2.2.1.1.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 159		(Key = 1.2.2.1.1.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 160		(Key = 1.2.2.1.1.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  fastest route
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 161		(Key = 1.2.2.1.2.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 162		(Key = 1.2.2.1.2.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 163		(Key = 1.2.2.1.2.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 164		(Key = 1.2.2.1.2.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 165		(Key = 1.2.2.1.2.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 166		(Key = 1.2.2.1.2.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 167		(Key = 1.2.2.1.2.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 168		(Key = 1.2.2.1.2.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 169		(Key = 1.2.2.1.2.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 170		(Key = 1.2.2.1.2.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 171		(Key = 1.2.2.1.2.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 172		(Key = 1.2.2.1.2.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 173		(Key = 1.2.2.1.2.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 174		(Key = 1.2.2.1.2.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 175		(Key = 1.2.2.1.2.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  alternative routes enabled
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 176		(Key = 1.2.2.1.3.1.2.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 177		(Key = 1.2.2.1.3.1.2.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 178		(Key = 1.2.2.1.3.1.2.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  restricted access (e
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 179		(Key = 1.2.2.1.3.1.3.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 180		(Key = 1.2.2.1.3.1.3.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 181		(Key = 1.2.2.1.3.1.3.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  g
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 182		(Key = 1.2.2.1.3.1.5.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 183		(Key = 1.2.2.1.3.1.5.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 184		(Key = 1.2.2.1.3.1.5.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing across different time zones
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 185		(Key = 1.2.2.1.3.1.6.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 186		(Key = 1.2.2.1.3.1.6.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 187		(Key = 1.2.2.1.3.1.6.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  handling one-way streets
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+
+
+Test Case 188		(Key = 1.2.2.1.3.1.7.1.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  small dataset (city-level)
+   Conditions                       :  valid input
+
+
+Test Case 189		(Key = 1.2.2.1.3.1.7.2.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  large dataset (country-level)
+   Conditions                       :  valid input
+
+
+Test Case 190		(Key = 1.2.2.1.3.1.7.3.1.)
+   Command                          :  route
+   Routing Profile                  :  bike
+   Input Coordinates                :  multiple waypoints
+   Graph Data (OSM or Custom Graph) :  valid OSM data
+   Routing Options                  :  avoid highways
+   Output Format                    :  JSON output
+   Edge Cases                       :  routing over bridges/tunnels
+   Performance Testing              :  high concurrency load
+   Conditions                       :  valid input
+

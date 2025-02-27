@@ -9,5 +9,17 @@
         <module name="graphhopper-test" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="directions-api-client-hc" target="17" />
+      <module name="graphhopper-core" target="17" />
+      <module name="graphhopper-example" target="17" />
+      <module name="graphhopper-map-matching" target="17" />
+      <module name="graphhopper-nav" target="17" />
+      <module name="graphhopper-reader-gtfs" target="17" />
+      <module name="graphhopper-tools" target="17" />
+      <module name="graphhopper-web" target="17" />
+      <module name="graphhopper-web-api" target="17" />
+      <module name="graphhopper-web-bundle" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

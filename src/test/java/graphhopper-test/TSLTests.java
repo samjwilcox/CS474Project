@@ -581,7 +581,7 @@ public class TSLTests {
     public void testRouteMultipleWaypointsFastestRouteLargeDataset() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Boise, Idaho
-                new GHPoint(44.95, -110.681),  // Near Yellowstone, Wyoming (you may adjust this if out of range)
+                new GHPoint(44.95, -110.681),  // Near Yellowstone, Wyoming
                 new GHPoint(45.687, -111.042)   // Bozeman, Montana
         );
 

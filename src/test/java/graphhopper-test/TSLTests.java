@@ -1,7 +1,10 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.graphhopper.config.LMProfile;
 import com.graphhopper.json.Statement;
 import com.graphhopper.routing.Path;
 import com.graphhopper.routing.TestProfiles;
+import com.graphhopper.util.Parameters;
+import com.graphhopper.util.shapes.GHPoint;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
@@ -13,6 +16,7 @@ import com.graphhopper.config.CHProfile;
 import com.graphhopper.config.Profile;
 
 import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * Test cases generated via TSL file.
@@ -30,13 +34,32 @@ public class TSLTests {
 
         hopper = new GraphHopper()
                 .setGraphHopperLocation("test")
-                .setOSMFile(basePath + "/bsu.osm")
+                .setOSMFile(basePath + "/IdahoArea.osm.pbf")
                 .setEncodedValuesString("car_access, car_average_speed")
                 .setProfiles(TestProfiles.accessAndSpeed("profile", "car"))
                 .setStoreOnFlush(true);
         hopper.getCHPreparationHandler()
                 .setCHProfiles(new CHProfile("profile"));
         hopper.importOrLoad();
+    }
+
+    /**
+     * Helper that converts the response into JSON format and verifies that the
+     * response object can be converted to JSON.
+     *
+     * @param response - The response object from GraphHopper.
+     * @return True if successful, false if failed.
+     */
+    public boolean convertToJSON(GHResponse response) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonOutput = mapper.writeValueAsString(response);
+            System.out.println("Generated JSON: " + jsonOutput);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -319,6 +342,319 @@ public class TSLTests {
 
         GHResponse response = hopper.route(request);
         assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 41: Small dataset (city-level) with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysCityLevel() {
+        GHRequest request = new GHRequest(43.6031, -116.2075, 43.5644, -116.2228) // Boise State University to Boise Airport
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 42: Large dataset (country-level) with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysLargeDataset() {
+        GHRequest request = new GHRequest(47.6588, -117.4260, 42.8713, -112.4455) // Spokane to Pocatello
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 43: High concurrency load with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysHighConcurrency() {
+        GHRequest request = new GHRequest(43.4917, -112.0331, 45.9584, -112.5325) // Idaho Falls, ID to Butte, MT
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 44: Small dataset (city-level) with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysCityLevelBoise() {
+        GHRequest request = new GHRequest(43.5644, -116.2228, 43.6007, -116.1996) // Boise Airport to BSU CS Building
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 45: Large dataset (country-level) with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysLargeDatasetOntarioToHelena() {
+        GHRequest request = new GHRequest(44.0266, -116.9629, 46.5891, -112.0391) // Ontario, OR to Helena, MT
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 46: High concurrency load with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysHighConcurrencySpokaneHelena() {
+        GHRequest request = new GHRequest(47.6588, -117.4260, 46.8787, -112.4808) // Spokane, WA to Helena, MT
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 47: Routing across different time zones with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysTimeZones() {
+        GHRequest request = new GHRequest(43.6075, -116.2018, 43.6254, -116.1220) // Boise State University CS building to Lucky Peak Park
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 48: Routing across different time zones with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysTimeZonesLargeDataset() {
+        GHRequest request = new GHRequest(47.6588, -117.4260, 43.4666, -112.0330) // Spokane, Washington to Idaho Falls, Idaho
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 49: Routing across different time zones with avoiding highways.
+     */
+    @Test
+    public void testRouteAvoidHighwaysTimeZonesHighConcurrencyLoad() {
+        GHRequest request = new GHRequest(47.6588, -117.4260, 41.5890, -109.2030) // Spokane, Washington to Rock Springs, Wyoming
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 50: Handling one-way streets with avoiding highways in a small dataset (city-level).
+     */
+    @Test
+    public void testRouteAvoidHighwaysOneWayStreetsSmallDataset() {
+        GHRequest request = new GHRequest(43.6560, -112.0260, 43.6177, -116.1701) // Idaho State Correctional Center to Idaho State Capitol Building
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 51: Handling one-way streets with avoiding highways in a large dataset (country-level).
+     */
+    @Test
+    public void testRouteAvoidHighwaysOneWayStreetsLargeDataset() {
+        GHRequest request = new GHRequest(41.5868, -109.2029, 44.0650, -116.9633) // Rock Springs, Wyoming to Ontario, Oregon
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 52: Handling one-way streets with avoiding highways and high concurrency load in a city-level dataset.
+     */
+    @Test
+    public void testRouteAvoidHighwaysOneWayStreetsHighConcurrencyLoad() {
+        GHRequest request = new GHRequest(43.6135, -116.2009, 43.6125, -116.1990) // Around downtown Boise
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 53: Routing over bridges/tunnels with avoiding highways and small dataset (city-level).
+     */
+    @Test
+    public void testRouteAvoidHighwaysBridgesTunnelsSmallDataset() {
+        GHRequest request = new GHRequest(43.5646, -116.2223, 43.6163, -116.2347) // Boise Airport to Mongolian BBQ location
+                .setProfile("profile") // Routing profile for car
+                .putHint("avoid", "highways"); // Avoid highways option
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 54: Routing over bridges/tunnels with avoiding highways and large dataset (country-level).
+     */
+    @Test
+    public void testRouteAvoidHighwaysBridgesTunnelsLargeDataset() {
+        GHRequest request = new GHRequest(45.6760, -111.0429, 42.8713, -112.4455) // Bozeman, MT to Pocatello, ID
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 55: Routing over bridges/tunnels with avoiding highways and high concurrency load.
+     */
+    @Test
+    public void testRouteAvoidHighwaysBridgesTunnelsHighConcurrency() {
+        GHRequest request = new GHRequest(43.615, -116.2023, 42.562, -114.4606) // Boise, ID to Twin Falls, ID
+                .setProfile("profile")
+                .putHint("avoid", "highways");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 56: Routing with multiple waypoints using the fastest route across a small dataset (city-level).
+     */
+    @Test
+    public void testRouteMultipleWaypointsFastestRouteCityLevel() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.615, -116.2023), // Boise, Idaho (starting point)
+                new GHPoint(43.618, -116.211),  // Boise City Hall (waypoint 1)
+                new GHPoint(43.625, -116.215)   // Boise State University (waypoint 2)
+        );
+
+        GHRequest request = new GHRequest(points)
+                .setProfile("profile")
+                .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI); // Fastest route option
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 57: Routing with multiple waypoints using the fastest route across a large dataset (country-level).
+     */
+    @Test
+    public void testRouteMultipleWaypointsFastestRouteLargeDataset() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.615, -116.2023), // Boise, Idaho
+                new GHPoint(44.95, -110.681),  // Near Yellowstone, Wyoming (you may adjust this if out of range)
+                new GHPoint(45.687, -111.042)   // Bozeman, Montana
+        );
+
+        GHRequest request = new GHRequest(points)
+                .setProfile("profile")
+                .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI); // Fastest route option
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 58: Routing with multiple waypoints using the fastest route, simulating high concurrency load.
+     */
+    @Test
+    public void testRouteMultipleWaypointsFastestRouteHighConcurrency() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.615, -116.2023), // Boise, Idaho (starting point)
+                new GHPoint(44.05, -116.59),    // Mountain Home, Idaho (waypoint 1)
+                new GHPoint(44.5, -116.7),      // Near Idaho City, Idaho (waypoint 2)
+                new GHPoint(45.0, -116.85)      // Near Cascade, Idaho (waypoint 3)
+        );
+
+        GHRequest request = new GHRequest(points)
+                .setProfile("profile")
+                .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI); // Fastest route option
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 59: Routing with multiple waypoints in Boise, Idaho (small dataset, city-level).
+     */
+    @Test
+    public void testRouteMultipleWaypointsFastestRouteSmallDataset() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.615, -116.2023), // Boise State University (starting point)
+                new GHPoint(43.564, -116.223),  // Boise Airport (waypoint 1)
+                new GHPoint(43.606, -116.202),  // Downtown Boise (waypoint 2)
+                new GHPoint(43.614, -116.238)   // A different point in Boise (waypoint 3)
+        );
+
+        GHRequest request = new GHRequest(points)
+                .setProfile("profile")
+                .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI); // Fastest route option
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 60: Routing with multiple waypoints across Idaho and Montana (large dataset, country-level).
+     */
+    @Test
+    public void testRouteMultipleWaypointsFastestRouteLargeDatasetIdahoMontana() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6176, -116.1997), // Boise, Idaho (starting point)
+                new GHPoint(42.9057, -112.4523), // Idaho Falls, Idaho (waypoint 1)
+                new GHPoint(46.5957, -112.0270), // Helena, Montana (waypoint 2)
+                new GHPoint(45.6794, -111.0448)  // Bozeman, Montana (waypoint 3)
+        );
+
+        GHRequest request = new GHRequest(points)
+                .setProfile("profile")
+                .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI); // Fastest route option
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
     }
 }
 

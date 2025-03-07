@@ -1,0 +1,4 @@
+src/test/java/graphhopper-test/IdahoArea.osm.pbf filter=lfs diff=lfs merge=lfs -text
+target/test-classes/IdahoArea.osm.pbf filter=lfs diff=lfs merge=lfs -text
+test/geometry filter=lfs diff=lfs merge=lfs -text
+test/edges filter=lfs diff=lfs merge=lfs -text

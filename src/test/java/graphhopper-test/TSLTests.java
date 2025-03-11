@@ -17,6 +17,10 @@ import com.graphhopper.config.Profile;
 
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Test cases generated via TSL file.
@@ -24,6 +28,8 @@ import java.util.*;
 public class TSLTests {
     private GraphHopper hopper;
     private String osmFile;
+    private static final int THREAD_COUNT = 50;
+    private static final ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
 
     /**
      * Initializes the graph hopper instance before each test execution.
@@ -655,6 +661,945 @@ public class TSLTests {
         GHResponse response = hopper.route(request);
         assertFalse("Expected successful response for valid input", response.hasErrors());
         assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 81: Routing with multiple waypoints, alternative routes enabled,
+     * handling one-way streets, and testing performance on a large dataset (Idaho & Montana).
+     */
+    @Test
+    public void testRouteMultipleWaypointsAlternativeRoutesLargeDataset() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.615, -116.2023), // Boise, Idaho (start)
+                new GHPoint(46.591, -112.015),  // Helena, Montana (waypoint 1)
+                new GHPoint(41.584, -109.220),  // Rock Springs, Wyoming (waypoint 2)
+                new GHPoint(45.0, -116.85)      // Near Cascade, Idaho (waypoint 3)
+        );
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            GHRequest request = new GHRequest(points.get(i), points.get(i + 1))
+                    .setProfile("profile")
+                    .setAlgorithm(Parameters.Algorithms.ALT_ROUTE)
+                    .putHint("alternative_route.max_paths", 3)
+                    .putHint("alternative_route.max_weight_factor", 5.0)
+                    .putHint("alternative_route.max_share_factor", 0.6);
+
+            GHResponse response = hopper.route(request);
+
+            assertFalse("Expected successful response for valid input", response.hasErrors());
+            assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+            // Validate that alternative routes are provided
+            assertTrue("Expected at least one alternative route", response.getAll().size() > 1);
+        }
+    }
+
+    /**
+     * Test Case 82: High concurrency routing with multiple waypoints, alternative routes enabled,
+     * handling one-way streets (separated into multiple segments).
+     */
+    @Test
+    public void testRouteMultipleWaypointsAlternativeRoutesHighConcurrency() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.615, -116.2023), // Boise, Idaho (start)
+                new GHPoint(46.591, -112.015),  // Helena, Montana (waypoint 1)
+                new GHPoint(41.584, -109.220),  // Rock Springs, Wyoming (waypoint 2)
+                new GHPoint(45.0, -116.85)      // Near Cascade, Idaho (waypoint 3)
+        );
+
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(points.get(startIdx), points.get(endIdx))
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.ALT_ROUTE)
+                        .putHint("alternative_route.max_paths", 3)
+                        .putHint("alternative_route.max_weight_factor", 2.0)
+                        .putHint("alternative_route.max_share_factor", 0.4);
+
+                GHResponse response = hopper.route(request);
+
+                if (response.hasErrors()) {
+                    System.err.println("Routing error: " + response.getErrors());
+                    return false;
+                }
+
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response.getAll().size() > 1;
+            }));
+        }
+
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected at least one alternative route in concurrent execution", future.get());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 83: Routing with multiple waypoints, alternative routes enabled,
+     * and testing performance on a small dataset (city-level).
+     */
+    @Test
+    public void testRouteMultipleWaypointsAlternativeRoutesSmallDataset() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6009, -116.2021), // BSU Student Union Building (starting point)
+                new GHPoint(43.6050, -116.1933), // Near QDOBA Mexican Eats (Broadway Ave), Boise, Idaho (waypoint 1)
+                new GHPoint(43.6231, -116.2532), // Near N Curtis Rd and Fairview, Boise, Idaho (waypoint 2)
+                new GHPoint(43.5900, -116.2486)  // Phillippi Rd and Overland Rd, Boise, Idaho (end point)
+        );
+
+        List<GHPoint> segmentPoints;
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.ALT_ROUTE)
+                        .putHint("alternative_route.max_paths", 3)
+                        .putHint("alternative_route.max_weight_factor", 5.0)
+                        .putHint("alternative_route.max_share_factor", 0.6);
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    System.err.println("Routing error: " + response.getErrors());
+                    return false;
+                }
+
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response.getAll().size() > 1;
+            }));
+        }
+
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected at least one alternative route in concurrent execution", future.get());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 84: Routing with multiple waypoints, alternative routes enabled,
+     * routing over bridges/tunnels, and testing performance on a large dataset (country-level).
+     */
+    @Test
+    public void testRouteMultipleWaypointsAlternativeRoutesCountryLevel() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.5689, -116.2207), // Starting point at Boise Airport, Boise, Idaho
+                new GHPoint(44.0274, -116.9640), // Ontario, Oregon (waypoint 1)
+                new GHPoint(44.4600, -110.8433), // Old Faithful, Yellowstone (waypoint 2)
+                new GHPoint(46.6058, -112.0092)  // Helena, Montana (end point)
+        );
+
+        List<GHPoint> segmentPoints;
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.ALT_ROUTE)
+                        .putHint("alternative_route.max_paths", 3)
+                        .putHint("alternative_route.max_weight_factor", 5.0)
+                        .putHint("alternative_route.max_share_factor", 0.6);
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    System.err.println("Routing error: " + response.getErrors());
+                    return false;
+                }
+
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response.getAll().size() > 1;
+            }));
+        }
+
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected at least one alternative route in concurrent execution", future.get());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 85: Routing with multiple waypoints, alternative routes enabled,
+     * routing over bridges/tunnels, and testing high concurrency load.
+     */
+    @Test
+    public void testRouteMultipleWaypointsAlternativeRoutesHighConcurrencyIdahoMontana() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6009, -116.2021), // Starting point in Boise, Idaho
+                new GHPoint(44.0682, -112.5897), // Near Butte, Montana (waypoint 1)
+                new GHPoint(44.5000, -112.1000), // Near Bozeman, Montana (waypoint 2)
+                new GHPoint(46.5952, -112.0052), // Near Helena, Montana (waypoint 3)
+                new GHPoint(46.8730, -113.9931), // Near Missoula, Montana (waypoint 4)
+                new GHPoint(41.5932, -109.2247)  // Rock Springs, Wyoming (end point)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<GHPoint> segmentPoints;
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.ALT_ROUTE)
+                        .putHint("alternative_route.max_paths", 3)
+                        .putHint("alternative_route.max_weight_factor", 3.0)
+                        .putHint("alternative_route.max_share_factor", 0.6);
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    System.err.println("Routing error: " + response.getErrors());
+                    return false;
+                }
+
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response.getAll().size() > 1;
+            }));
+        }
+
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected at least one alternative route in concurrent execution", future.get());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 86: Routing with multiple waypoints, avoid highways option enabled,
+     * handling restricted access, and testing performance on a small dataset (city-level).
+     */
+    @Test
+    public void testRouteAvoidHighwaysRestrictedAccessCityLevel() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6022, -116.2003), // Start Point: BSU Student Union
+                new GHPoint(43.6166, -116.2023), // Waypoint 1: Downtown Boise
+                new GHPoint(43.6400, -116.1964), // Waypoint 2: North End Boise
+                new GHPoint(43.6280, -116.1830), // Waypoint 3: Boise River Greenbelt
+                new GHPoint(43.6150, -116.1820)  // End Point: East Boise
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        List<GHPoint> segmentPoints;
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true)
+                        .putHint("vehicle.restricted", true);
+
+                GHResponse response = hopper.route(request);
+
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                if (response.hasErrors()) {
+                    System.err.println("Routing error: " + response.getErrors());
+                    return false;
+                }
+
+                return true;
+            }));
+        }
+
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected at least one route that avoids highways and handles restricted access", future.get());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 87: Routing with multiple waypoints, avoid highways option enabled,
+     * handling restricted access, and testing performance on a small dataset (country-wide).
+     */
+    @Test
+    public void testRouteAvoidHighwaysRestrictedAccessCityLevelCw() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.5459, -116.3129), // Albertsons, South Boise, Idaho
+                new GHPoint(44.0262, -116.9630), // Ontario, Oregon
+                new GHPoint(46.6175, -112.0156), // Buffalo Wild Wings, Helena, Montana
+                new GHPoint(43.5113, -112.0182), // Idaho Falls, Idaho
+                new GHPoint(43.4795, -110.7591)  // Jackson, Wyoming
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        List<GHPoint> segmentPoints;
+        List<Future<Boolean>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true)
+                        .putHint("vehicle.restricted", true);
+
+                GHResponse response = hopper.route(request);
+
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                if (response.hasErrors()) {
+                    System.err.println("Routing error: " + response.getErrors());
+                    return false;
+                }
+
+                return true;
+            }));
+        }
+
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected at least one route that avoids highways and handles restricted access", future.get());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 88: Routing with multiple waypoints, avoid highways option enabled,
+     * handling restricted access, and testing performance under high concurrency load.
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithMultipleWaypointsAndConcurrency() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6022, -116.2003), // Start Point: BSU Student Union
+                new GHPoint(43.6166, -116.2023), // Waypoint 1: Downtown Boise
+                new GHPoint(43.6400, -116.1964), // Waypoint 2: North End Boise
+                new GHPoint(43.6280, -116.1830), // Waypoint 3: Boise River Greenbelt
+                new GHPoint(43.6150, -116.1820)  // End Point: East Boise
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true)
+                        .putHint("vehicle.restricted", true);
+
+                return hopper.route(request);
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+                assertNotNull("Expected a non-null response", response);
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 89: Routing with multiple waypoints, avoid highways option enabled,
+     * testing performance on a small dataset (city-level), and handling valid input.
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithMultipleWaypointsAndSmallDataset() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6022, -116.2003), // Start Point: BSU Student Union
+                new GHPoint(43.6166, -116.2023), // Waypoint 1: Downtown Boise
+                new GHPoint(43.6400, -116.1964), // Waypoint 2: North End Boise
+                new GHPoint(43.6280, -116.1830), // Waypoint 3: Boise River Greenbelt
+                new GHPoint(43.6150, -116.1820)  // End Point: East Boise
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                return hopper.route(request);
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+                assertNotNull("Expected a non-null response", response);
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 90: Routing with multiple waypoints, avoid highways option enabled,
+     * testing performance on a large dataset (country-level), and handling valid input.
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithMultipleWaypointsAndLargeDataset() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6022, -116.2003), // Start Point: Boise, Idaho (BSU Student Union)
+                new GHPoint(42.5570, -114.4685), // Waypoint 1: Twin Falls, Idaho
+                new GHPoint(46.5842, -112.0395), // Waypoint 2: Helena, Montana
+                new GHPoint(45.5971, -111.0389), // Waypoint 3: Bozeman, Montana
+                new GHPoint(44.0281, -116.9580)  // End Point: Kalispell, Montana
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                return hopper.route(request);
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+                assertNotNull("Expected a non-null response", response);
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 92: Routing with multiple waypoints between Idaho and Montana,
+     * avoid highways option enabled, handling restricted access, and testing performance under high concurrency load.
+     */
+    @Test
+    public void testRouteAvoidHighwaysBetweenIdahoAndMontanaWithConcurrency() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(47.7000, -116.7750), // Start Point: Near the Idaho-Montana border (Coeur d'Alene, ID)
+                new GHPoint(46.8610, -114.1250), // Waypoint 1: Near Lolo, Montana (U.S. Route 12)
+                new GHPoint(46.8772, -113.9969), // Waypoint 2: Near Missoula, Montana (I-90)
+                new GHPoint(48.1920, -114.3120)  // End Point: Near Kalispell, Montana (Flathead River)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true)
+                        .putHint("vehicle.restricted", true);
+
+                GHResponse response = hopper.route(request);
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+                assertNotNull("Expected a non-null response", response);
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 92: Routing with multiple waypoints across different time zones,
+     * avoid highways option enabled, and testing performance on a small dataset (city-level).
+     */
+    @Test
+    public void testRouteAvoidHighwaysAcrossTimeZones() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6150, -116.2020), // Start Point: Boise, Idaho (Mountain Time Zone)
+                new GHPoint(48.2765, -116.5535), // Waypoint 1: Sandpoint, Idaho (Pacific Time Zone)
+                new GHPoint(45.9982, -114.0426), // Waypoint 2: Near Missoula, Montana (Mountain Time Zone)
+                new GHPoint(47.6125, -114.3235), // Waypoint 3: Near Kalispell, Montana (Mountain Time Zone)
+                new GHPoint(48.2180, -114.3700)  // End Point: Flathead Lake, Montana (Mountain Time Zone)
+        );
+
+        GHRequest request = new GHRequest(points)
+                .setProfile("profile")
+                .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                .putHint("avoid_highways", true);
+
+        GHResponse response = hopper.route(request);
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 93: Routing with multiple waypoints across different time zones,
+     * avoid highways option enabled, and testing performance on a large dataset (Idaho and Montana).
+     */
+    @Test
+    public void testRouteAvoidHighwaysAcrossTimeZonesLargeDataset() {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6150, -116.2020), // Start Point: Boise, Idaho (Mountain Time Zone)
+                new GHPoint(48.2765, -116.5535), // Waypoint 1: Sandpoint, Idaho (Pacific Time Zone)
+                new GHPoint(45.9982, -114.0426), // Waypoint 2: Near Missoula, Montana (Mountain Time Zone)
+                new GHPoint(46.5900, -112.0250), // Waypoint 3: Near Helena, Montana (Mountain Time Zone)
+                new GHPoint(47.6125, -114.3235)  // End Point: Near Kalispell, Montana (Mountain Time Zone)
+        );
+
+        GHRequest request = new GHRequest(points)
+                .setProfile("profile")
+                .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                .putHint("avoid_highways", true);
+
+        GHResponse response = hopper.route(request);
+        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 94: Routing with multiple waypoints across different time zones,
+     * avoid highways option enabled, and testing performance under high concurrency load.
+     */
+    @Test
+    public void testRouteAvoidHighwaysAcrossTimeZonesHighConcurrency() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6150, -116.2020), // Start Point: Boise, Idaho (Mountain Time Zone)
+                new GHPoint(48.2765, -116.5535), // Waypoint 1: Sandpoint, Idaho (Pacific Time Zone)
+                new GHPoint(45.9982, -114.0426), // Waypoint 2: Near Missoula, Montana (Mountain Time Zone)
+                new GHPoint(46.5900, -112.0250), // Waypoint 3: Near Helena, Montana (Mountain Time Zone)
+                new GHPoint(47.6125, -114.3235)  // End Point: Near Kalispell, Montana (Mountain Time Zone)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertFalse("Expected successfull repsonse for valid input", response.hasErrors());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 95: Routing with multiple waypoints, avoid highways option enabled,
+     * and handling one-way streets in a city-level dataset.
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithOneWayStreets() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6166, -116.2023), // Start Point: Downtown Boise
+                new GHPoint(43.6140, -116.1990), // Waypoint 1: Near City Hall
+                new GHPoint(43.6100, -116.2010), // Waypoint 2: Near the Capitol Building
+                new GHPoint(43.6070, -116.2045)  // End Point: Near the Basque Block
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertFalse("Expected successfull repsonse for valid input", response.hasErrors());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 96: Routing with multiple waypoints, avoid highways option enabled,
+     * and handling one-way streets in a country-level dataset.
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithOneWayStreetsCountryLevel() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6166, -116.2023), // Start Point: Downtown Boise, Idaho
+                new GHPoint(47.7000, -116.7750), // Near the Idaho-Montana border (Coeur d'Alene, ID)
+                new GHPoint(46.8610, -114.1250), // Waypoint 1: Near Lolo, Montana (U.S. Route 12)
+                new GHPoint(46.8772, -113.9969), // Waypoint 2: Near Missoula, Montana (I-90)
+                new GHPoint(48.1920, -114.3120)  // End Point: Near Kalispell, Montana (Flathead River)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertFalse("Expected successfull repsonse for valid input", response.hasErrors());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 97: Routing with multiple waypoints, avoid highways option enabled,
+     * and handling one-way streets under high concurrency load.
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithOneWayStreetsHighConcurrency() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6166, -116.2023), // Start Point: Downtown Boise, Idaho
+                new GHPoint(47.7000, -116.7750), // Near the Idaho-Montana border (Coeur d'Alene, ID)
+                new GHPoint(46.8610, -114.1250), // Waypoint 1: Near Lolo, Montana (U.S. Route 12)
+                new GHPoint(46.8772, -113.9969), // Waypoint 2: Near Missoula, Montana (I-90)
+                new GHPoint(48.1920, -114.3120)  // End Point: Near Kalispell, Montana (Flathead River)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertFalse("Expected successfull repsonse for valid input", response.hasErrors());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 98: Routing with multiple waypoints, avoid highways option enabled,
+     * and routing over bridges/tunnels with a small dataset (city-level).
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithBridgesAndTunnels() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6150, -116.2023), // Start Point: Downtown Boise
+                new GHPoint(43.6250, -116.2150), // Waypoint 1: Boise River (near bridge)
+                new GHPoint(43.6320, -116.2110), // Waypoint 2: Near the Veterans Memorial Parkway bridge
+                new GHPoint(43.6300, -116.2070), // Waypoint 3: Boise Airport area (near tunnel)
+                new GHPoint(43.6350, -116.1920)  // End Point: Boise State University (near bridge)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(4);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertFalse("Expected successfull repsonse for valid input", response.hasErrors());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 99: Routing with multiple waypoints, avoid highways option enabled,
+     * and routing over bridges/tunnels with a large dataset (Idaho and Montana).
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithBridgesAndTunnelsLargeDatasetIdahoMontana() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6150, -116.2023), // Start Point: Boise, Idaho (near the Boise River and bridges)
+                new GHPoint(44.5585, -111.2887), // Waypoint 1: Idaho Falls, Idaho (near Snake River Bridge)
+                new GHPoint(46.5950, -112.0397), // Waypoint 2: Helena, Montana (near the Last Chance Gulch Tunnel)
+                new GHPoint(47.6607, -114.3530), // Waypoint 3: Missoula, Montana (near bridges and tunnels)
+                new GHPoint(48.3064, -114.3659)  // End Point: Kalispell, Montana (near bridges over Flathead River)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertFalse("Expected successfull repsonse for valid input", response.hasErrors());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
+     * Test Case 100: Routing with multiple waypoints, avoid highways option enabled,
+     * and routing over bridges/tunnels with high concurrency load.
+     */
+    @Test
+    public void testRouteAvoidHighwaysWithBridgesAndTunnelsHighConcurrency() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6150, -116.2023), // Start Point: Boise, Idaho (near Boise River and bridges)
+                new GHPoint(44.5585, -111.2887), // Waypoint 1: Idaho Falls, Idaho (near Snake River Bridge)
+                new GHPoint(46.5950, -112.0397), // Waypoint 2: Helena, Montana (near Last Chance Gulch Tunnel)
+                new GHPoint(47.6607, -114.3530), // Waypoint 3: Missoula, Montana (near bridges and tunnels)
+                new GHPoint(48.3064, -114.3659)  // End Point: Kalispell, Montana (near bridges over Flathead River)
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segmentPoints = Arrays.asList(points.get(startIdx), points.get(endIdx));
+
+            List<GHPoint> finalSegmentPoints = segmentPoints;
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(finalSegmentPoints)
+                        .setProfile("profile")
+                        .setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI)
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response));
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertFalse("Expected successfull repsonse for valid input", response.hasErrors());
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
     }
 }
 

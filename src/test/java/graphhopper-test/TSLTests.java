@@ -454,6 +454,123 @@ public class TSLTests {
      */
 
     /**
+     * Test Case 32: Small dataset (city-level) routing across time zones with alternative routing
+     */
+    @Test
+    public void testAlternateRoutingSmallDatasetTimezones() {
+        GHRequest request = new GHRequest(44.0770, -116.9430, 44.0775, -116.9335)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 33: Large dataset (country-level) routing across time zones with alternative routing
+     */
+    @Test
+    public void testAlternateRoutingLargeDatasetTimezones() {
+        GHRequest request = new GHRequest(43.8765, -116.9940, 44.0070, -116.9225)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 34: High concurrency dataset routing across time zones with alternative routes
+     */
+    @Test
+    public void testAlternateRoutingHighConcurrencyTimezones() {
+        GHRequest request = new GHRequest(44.0266, -116.9612, 44.0070, -116.9225)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 35: Small dataset (city-level) routing handling one-way streets
+     */
+    @Test
+    public void testAlternateRoutingSmallDatasetOneWay() {
+        GHRequest request = new GHRequest(43.6150, -116.2023, 43.6205, -116.2107)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 36: Large dataset (country-level) routing handling one-way streets
+     */
+    @Test
+    public void testAlternateRoutingLargeDatasetOneWay() {
+        GHRequest request = new GHRequest(43.6005, -116.1950, 43.6500, -116.2500)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 37: High concurrency dataset routing handling one-way streets
+     */
+    @Test
+    public void testAlternateRoutingHighConcurrencyOneWay() {
+        GHRequest request = new GHRequest(43.6100, -116.1800, 43.6400, -116.2200)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 38: Small dataset (city-level) routing over bridges/tunnels
+     */
+    @Test
+    public void testAlternateRoutingSmallDatasetBridges() {
+        GHRequest request = new GHRequest(43.6178, -116.1996, 43.6317, -116.2386)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 39: Large dataset (country-level) routing over bridges/tunnels
+     */
+    @Test
+    public void testAlternateRoutingLargeDatasetBridges() {
+        GHRequest request = new GHRequest(43.5895, -116.2537, 43.6581, -116.2780)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
+     * Test Case 40: High concurrency dataset routing over bridges/tunnels
+     */
+    @Test
+    public void testAlternateRoutingHighConcurrencyBridges() {
+        GHRequest request = new GHRequest(43.5896, -116.2035, 43.6500, -116.2500)
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected successful response for valid input", response.hasErrors());
+    }
+
+    /**
      * Test Case 41: Small dataset (city-level) with avoiding highways.
      */
     @Test

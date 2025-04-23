@@ -50,6 +50,23 @@ public class TSLTests {
     }
 
     /**
+     * Helper that sets up the hopper instance using the bike profile.
+     */
+    private void setupForBike() {
+        String basePath = String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "test", "java", "graphhopper-test"));
+
+        hopper = new GraphHopper()
+                .setGraphHopperLocation("test-bike")
+                .setOSMFile(basePath + "/IdahoArea.osm.pbf")
+                .setEncodedValuesString("bike_access, bike_average_speed")
+                .setProfiles(TestProfiles.accessAndSpeed("bike", "bike"))
+                .setStoreOnFlush(true);
+        hopper.getCHPreparationHandler()
+                .setCHProfiles(new CHProfile("bike"));
+        hopper.importOrLoad();
+    }
+
+    /**
      * Helper that converts the response into JSON format and verifies that the
      * response object can be converted to JSON.
      *
@@ -1820,6 +1837,454 @@ public class TSLTests {
         }
 
         executor.shutdown();
+    }
+
+    /**
+     * Test Case 101: Routing with bike profile, retricted access scenario,
+     * using fastest route and small dataset (city-level).
+     */
+    @Test
+    public void testRouteBikeRestrictedAccessCityDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(43.6150, -116.2023, 43.6180, -116.2050)
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route for bike profile in city-level dataset", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 102: Routing with bike profile, restricted access scenario,
+     * using fastest route and large dataset (Montana to Idaho).
+     */
+    @Test
+    public void testRouteBikeRestrictedAccessCountryDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(47.4980, -111.3008, 46.8772, -113.9956) // Great Falls to Missoula, MT
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route for bike profile in country-level dataset", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 103: Routing with bike profile under high concurrency load,
+     * restricted access scenario using fastest route and valid input.
+     */
+    @Test
+    public void testRouteBikeRestrictedAccessHighConcurrency() throws InterruptedException {
+        setupForBike();
+
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest request = new GHRequest(43.6150, -116.2023, 43.6200, -116.2100) // Boise, ID
+                        .setProfile("bike");
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    response.getErrors().forEach(Throwable::printStackTrace);
+                }
+                return !response.hasErrors() && convertToJSON(response);
+            });
+        }
+
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected successful routing and JSON serialization", future.get());
+            } catch (ExecutionException e) {
+                fail("Concurrency routing error: " + e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Test Case 104: Routing with bike profile, geometry edge case scenario,
+     * using fastest route and small dataset (city-level, southern Washington).
+     */
+    @Test
+    public void testRouteBikeGeometryEdgeCaseCityDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(46.2406, -119.1026, 46.2460, -119.1150) // Kennewick, WA (edge of urban area)
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route for bike profile in city geometry edge case", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 105: Routing with bike profile, geometry edge case scenario,
+     * using fastest route and large dataset (Montana).
+     */
+    @Test
+    public void testRouteBikeGeometryEdgeCaseCountryDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(47.0528, -109.4707, 47.1068, -109.5207) // Lewistown, MT (rural region)
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route for bike profile in country geometry edge case", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 106: Routing with bike profile, geometry edge case scenario,
+     * using fastest route and high concurrency load (Montana).
+     */
+    @Test
+    public void testRouteBikeGeometryEdgeCaseHighConcurrency() throws InterruptedException {
+        setupForBike();
+
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest request = new GHRequest(46.8722, -113.9940, 46.8800, -114.0000) // Missoula, MT near edge paths
+                        .setProfile("bike");
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    response.getErrors().forEach(Throwable::printStackTrace);
+                }
+                return !response.hasErrors() && convertToJSON(response);
+            });
+        }
+
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected valid route and JSON serialization", future.get());
+            } catch (ExecutionException e) {
+                fail("Routing failed under concurrency: " + e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Test Case 107: Routing with bike profile across time zone boundary,
+     * using fastest route and small dataset (city-level, Idaho).
+     */
+    @Test
+    public void testRouteBikeCrossTimeZoneCityDataset() {
+        setupForBike();
+
+        // Near the Mountain/Pacific time boundary in Idaho
+        GHRequest request = new GHRequest(44.0780, -116.9320, 44.0795, -116.9500) // Payette to Fruitland, ID
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route across time zones", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 108: Routing with bike profile across time zone boundary,
+     * using fastest route and large dataset (Montana to Idaho).
+     */
+    @Test
+    public void testRouteBikeCrossTimeZoneCountryDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(46.5950, -112.0397, 44.0682, -114.7420) // Helena, MT to Stanley, ID
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route across time zones", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 109: Routing with bike profile across time zone boundary,
+     * using fastest route and high concurrency load (Idaho to Montana).
+     */
+    @Test
+    public void testRouteBikeCrossTimeZoneHighConcurrency() throws InterruptedException {
+        setupForBike();
+
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest request = new GHRequest(47.4741, -115.9243, 47.1947, -114.8912) // Wallace, ID → Superior, MT
+                        .setProfile("bike");
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    response.getErrors().forEach(Throwable::printStackTrace);
+                }
+                return !response.hasErrors() && convertToJSON(response);
+            });
+        }
+
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected valid concurrent routing across time zones", future.get());
+            } catch (ExecutionException e) {
+                fail("Routing concurrency error: " + e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Test Case 110: Routing with bike profile, one-way street handling scenario,
+     * using fastest route and small dataset (city-level, Idaho).
+     */
+    @Test
+    public void testRouteBikeOneWayStreetCityDataset() {
+        setupForBike();
+
+        // Downtown Boise has one-way streets; simulate routing across them
+        GHRequest request = new GHRequest(43.6150, -116.2030, 43.6175, -116.1990)
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route handling one-way streets", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 111: Routing with bike profile, handling one-way streets,
+     * using fastest route and large dataset (country-level, Montana).
+     */
+    @Test
+    public void testRouteBikeOneWayStreetCountryDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(46.5950, -112.0397, 45.7833, -108.5007) // Helena → Billings, MT
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid route handling one-way streets", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 112: Routing with bike profile, handling one-way streets,
+     * using fastest route and high concurrency load (Idaho).
+     */
+    @Test
+    public void testRouteBikeOneWayStreetHighConcurrency() throws InterruptedException {
+        setupForBike();
+
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest request = new GHRequest(43.6150, -116.2030, 43.6175, -116.1990) // Downtown Boise, ID
+                        .setProfile("bike");
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    response.getErrors().forEach(Throwable::printStackTrace);
+                }
+                return !response.hasErrors() && convertToJSON(response);
+            });
+        }
+
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected valid concurrent one-way routing", future.get());
+            } catch (ExecutionException e) {
+                fail("Concurrency one-way street routing failed: " + e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Test Case 113: Routing with bike profile over bridges/tunnels,
+     * using fastest route and small dataset (city-level, southern Washington).
+     */
+    @Test
+    public void testRouteBikeBridgesTunnelsCityDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(46.2100, -119.1050, 46.2200, -119.0900) // Kennewick to Pasco, WA over Columbia River
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid bridge/tunnel route in city-level data", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 114: Routing with bike profile over bridges/tunnels,
+     * using fastest route and large dataset (country-level, Montana).
+     */
+    @Test
+    public void testRouteBikeBridgesTunnelsCountryDataset() {
+        setupForBike();
+
+        // Missoula area: Clark Fork River bridge, city grid, known bike paths
+        GHRequest request = new GHRequest(46.8700, -114.0150, 46.8722, -113.9940) // South to North Missoula (over river)
+                .setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid bridge/tunnel route in country-level data", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 115: Routing with bike profile over bridges/tunnels,
+     * using fastest route and high concurrency load (Montana/Idaho).
+     */
+    @Test
+    public void testRouteBikeBridgesTunnelsHighConcurrency() throws InterruptedException {
+        setupForBike();
+
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest request = new GHRequest(47.4741, -115.9243, 47.1947, -114.8912) // Wallace, ID → Superior, MT
+                        .setProfile("bike");
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    response.getErrors().forEach(Throwable::printStackTrace);
+                }
+                return !response.hasErrors() && convertToJSON(response);
+            });
+        }
+
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected successful concurrent bridge/tunnel routing", future.get());
+            } catch (ExecutionException e) {
+                fail("Bridge/tunnel concurrency routing failed: " + e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Test Case 116: Routing with bike profile and alternative routes enabled,
+     * restricted access scenario using fastest route and small dataset (Boise, ID).
+     */
+    @Test
+    public void testRouteBikeAlternativeRoutesRestrictedAccessCityDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(43.6150, -116.2023, 43.6180, -116.2050) // Downtown Boise
+                .setProfile("bike")
+                .setAlgorithm(Parameters.Algorithms.ALT_ROUTE);
+
+        request.getHints().putObject(Parameters.Algorithms.AltRoute.MAX_PATHS, 3);
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid alternative route for restricted access city-level", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 117: Routing with bike profile and alternative routes enabled,
+     * restricted access scenario using fastest route and large dataset (Montana).
+     */
+    @Test
+    public void testRouteBikeAlternativeRoutesRestrictedAccessCountryDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(46.5950, -112.0397, 45.7833, -108.5007) // Helena to Billings, MT
+                .setProfile("bike")
+                .setAlgorithm(Parameters.Algorithms.ALT_ROUTE);
+
+        request.getHints().putObject(Parameters.Algorithms.AltRoute.MAX_PATHS, 3);
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid alternative route for restricted access country-level", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 118: Routing with bike profile and alternative routes enabled,
+     * restricted access scenario under high concurrency load (Idaho).
+     */
+    @Test
+    public void testRouteBikeAlternativeRoutesRestrictedAccessHighConcurrency() throws InterruptedException {
+        setupForBike();
+
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest request = new GHRequest(46.4170, -117.0211, 46.4220, -117.0300) // Lewiston, ID
+                        .setProfile("bike")
+                        .setAlgorithm(Parameters.Algorithms.ALT_ROUTE);
+
+                request.getHints().putObject(Parameters.Algorithms.AltRoute.MAX_PATHS, 2);
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    response.getErrors().forEach(Throwable::printStackTrace);
+                }
+                return !response.hasErrors() && convertToJSON(response);
+            });
+        }
+
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        for (Future<Boolean> future : results) {
+            try {
+                assertTrue("Expected valid concurrent alternative routing for restricted access", future.get());
+            } catch (ExecutionException e) {
+                fail("Concurrency error during alternative routing: " + e.getCause());
+            }
+        }
+    }
+
+    /**
+     * Test Case 119: Routing with bike profile and alternative routes enabled,
+     * geometry edge case using fastest route and small dataset (Pasco, WA).
+     */
+    @Test
+    public void testRouteBikeAlternativeRoutesGeometryEdgeCaseCityDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(46.2396, -119.1015, 46.2465, -119.1132) // Edge of Pasco (disconnected grid)
+                .setProfile("bike")
+                .setAlgorithm(Parameters.Algorithms.ALT_ROUTE);
+
+        request.getHints().putObject(Parameters.Algorithms.AltRoute.MAX_PATHS, 2);
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid alternative route for geometry edge case (city-level)", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 120: Routing with bike profile and alternative routes enabled,
+     * geometry edge case using fastest route and large dataset (Montana).
+     */
+    @Test
+    public void testRouteBikeAlternativeRoutesGeometryEdgeCaseCountryDataset() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(46.8722, -113.9940, 46.8772, -113.9800) // Missoula, MT — edge between city grid and trail paths
+                .setProfile("bike")
+                .setAlgorithm(Parameters.Algorithms.ALT_ROUTE);
+
+        request.getHints().putObject(Parameters.Algorithms.AltRoute.MAX_PATHS, 2);
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid alternative route for geometry edge case (country-level)", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
     }
 }
 

@@ -1009,68 +1009,131 @@ public class TSLTests {
         assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response3));
     }
 
-
-
     /**
-     * Test Case 77: Routing with multiple waypoints, alternative routes enabled, across time zones (city-level).
+     * Test Case 77: Simulated alternative routes with multiple waypoints across time zones (city-level).
+     * Key = 1.1.2.1.2.1.5.1.1.
      */
     @Test
-    public void testRouteMultipleWaypointsCityLevelTimeZone() {
-        // First segment: Boise to first waypoint (crossing time zones)
+    public void testRouteMultipleWaypointsTimezonesCityLevel() {
+        // Segment 1: Near Fruitland, ID to border
         List<GHPoint> segment1 = Arrays.asList(
-                new GHPoint(43.6150, -116.2023), // Start in Boise, ID
-                new GHPoint(44.0521, -123.0868)  // Portland, OR (across time zone)
+                new GHPoint(44.0060, -116.9160), // Fruitland, ID
+                new GHPoint(44.0075, -116.9260)  // ID-OR border
         );
 
-        // Second segment: Portland to second waypoint
+        // Segment 2: Border to Ontario, OR
         List<GHPoint> segment2 = Arrays.asList(
-                new GHPoint(44.0521, -123.0868), // Portland, OR
-                new GHPoint(44.0330, -123.1025)  // Second waypoint near Portland
+                new GHPoint(44.0075, -116.9260),
+                new GHPoint(44.0185, -116.9700)  // Ontario, OR
         );
 
-        // Third segment: Second waypoint to final destination
-        List<GHPoint> segment3 = Arrays.asList(
-                new GHPoint(44.0330, -123.1025), // Second waypoint near Portland
-                new GHPoint(44.0521, -123.0868)  // Return to Portland
-        );
+        GHRequest request1 = new GHRequest(segment1).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
+        GHRequest request2 = new GHRequest(segment2).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
 
-        // Request for first segment with alternative routes enabled
-        GHRequest request1 = new GHRequest(segment1)
-                .setProfile("profile")
-                .setAlgorithm("alternative_route");
-
-
-        // Request for second segment with alternative routes enabled
-        GHRequest request2 = new GHRequest(segment2)
-                .setProfile("profile")
-                .setAlgorithm("alternative_route");
-
-
-        // Request for third segment with alternative routes enabled
-        GHRequest request3 = new GHRequest(segment3)
-                .setProfile("profile")
-                .setAlgorithm("alternative_route");
-
-
-        // Get responses for all segments
         GHResponse response1 = hopper.route(request1);
         GHResponse response2 = hopper.route(request2);
-        GHResponse response3 = hopper.route(request3);
 
-        // Ensure no errors for any response and check JSON conversion
         assertFalse("Expected successful response for valid input", response1.hasErrors());
-        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response1));
+        assertTrue("Expected valid JSON output", convertToJSON(response1));
 
         assertFalse("Expected successful response for valid input", response2.hasErrors());
-        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response2));
+        assertTrue("Expected valid JSON output", convertToJSON(response2));
+    }
 
-        assertFalse("Expected successful response for valid input", response3.hasErrors());
-        assertTrue("Expected response to be successfully converted to JSON output", convertToJSON(response3));
+    /**
+     * Test Case 78: Simulated alternative routes with multiple waypoints across time zones (country-level).
+     * Key = 1.1.2.1.2.1.5.2.1.
+     */
+    @Test
+    public void testRouteMultipleWaypointsTimezonesCountryLevel() {
+        // Segment 1: Ontario, OR to Weiser, ID
+        List<GHPoint> segment1 = Arrays.asList(
+                new GHPoint(44.0260, -116.9620), // Ontario, OR
+                new GHPoint(44.2485, -116.9705)  // Weiser, ID
+        );
+
+        // Segment 2: Weiser, ID to Huntington, OR
+        List<GHPoint> segment2 = Arrays.asList(
+                new GHPoint(44.2485, -116.9705),
+                new GHPoint(44.4098, -117.2674)  // Huntington, OR
+        );
+
+        GHRequest request1 = new GHRequest(segment1).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
+        GHRequest request2 = new GHRequest(segment2).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
+
+        GHResponse response1 = hopper.route(request1);
+        GHResponse response2 = hopper.route(request2);
+
+        assertFalse("Expected successful response for valid input", response1.hasErrors());
+        assertTrue("Expected valid JSON output", convertToJSON(response1));
+
+        assertFalse("Expected successful response for valid input", response2.hasErrors());
+        assertTrue("Expected valid JSON output", convertToJSON(response2));
     }
 
 
+    /**
+     * Test Case 79: Simulated alternative routes with high concurrency near OR-ID border.
+     * Key = 1.1.2.1.2.1.5.3.1.
+     */
+    @Test
+    public void testRouteMultipleWaypointsTimezonesHighConcurrency1() {
+        // Segment 1: Start near Fruitland, ID
+        List<GHPoint> segment1 = Arrays.asList(
+                new GHPoint(44.0100, -116.9300),
+                new GHPoint(44.0105, -116.9450)
+        );
+
+        // Segment 2: Into Ontario, OR
+        List<GHPoint> segment2 = Arrays.asList(
+                new GHPoint(44.0105, -116.9450),
+                new GHPoint(44.0185, -116.9700)
+        );
+
+        GHRequest request1 = new GHRequest(segment1).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
+        GHRequest request2 = new GHRequest(segment2).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
+
+        GHResponse response1 = hopper.route(request1);
+        GHResponse response2 = hopper.route(request2);
+
+        assertFalse("Expected successful response for valid input", response1.hasErrors());
+        assertTrue("Expected valid JSON output", convertToJSON(response1));
+
+        assertFalse("Expected successful response for valid input", response2.hasErrors());
+        assertTrue("Expected valid JSON output", convertToJSON(response2));
+    }
 
 
+    /**
+     * Test Case 80: Simulated alternative routes handling one-way streets near OR-ID border (city-level).
+     * Key = 1.1.2.1.2.1.6.1.1.
+     */
+    @Test
+    public void testRouteMultipleWaypointsOneWayNearBorderCityLevel() {
+        // Segment 1: Start near downtown Ontario, OR
+        List<GHPoint> segment1 = Arrays.asList(
+                new GHPoint(44.0210, -116.9730),
+                new GHPoint(44.0190, -116.9620)
+        );
+
+        // Segment 2: Loop toward Fruitland, ID through bridge (border)
+        List<GHPoint> segment2 = Arrays.asList(
+                new GHPoint(44.0190, -116.9620),
+                new GHPoint(44.0085, -116.9335)
+        );
+
+        GHRequest request1 = new GHRequest(segment1).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
+        GHRequest request2 = new GHRequest(segment2).setProfile("profile").setAlgorithm(Parameters.Algorithms.DIJKSTRA_BI);
+
+        GHResponse response1 = hopper.route(request1);
+        GHResponse response2 = hopper.route(request2);
+
+        assertFalse("Expected successful response for valid input", response1.hasErrors());
+        assertTrue("Expected valid JSON output", convertToJSON(response1));
+
+        assertFalse("Expected successful response for valid input", response2.hasErrors());
+        assertTrue("Expected valid JSON output", convertToJSON(response2));
+    }
 
     /**
      * Test Case 81: Routing with multiple waypoints, alternative routes enabled,

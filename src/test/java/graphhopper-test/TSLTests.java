@@ -5,6 +5,7 @@ import com.graphhopper.routing.Path;
 import com.graphhopper.routing.TestProfiles;
 import com.graphhopper.util.Parameters;
 import com.graphhopper.util.shapes.GHPoint;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;
@@ -26,13 +27,14 @@ public class TSLTests {
     private GraphHopper hopper;
     private String osmFile;
     private static final int THREAD_COUNT = 50;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+    private static ExecutorService executor;
 
     /**
      * Initializes the graph hopper instance before each test execution.
      */
     @Before
     public void setUp() {
+        executor = Executors.newFixedThreadPool(THREAD_COUNT);
         String basePath = String.valueOf(Paths.get(System.getProperty("user.dir"), "src", "test", "java", "graphhopper-test"));
 
         hopper = new GraphHopper()
@@ -44,6 +46,14 @@ public class TSLTests {
         hopper.getCHPreparationHandler()
                 .setCHProfiles(new CHProfile("profile"));
         hopper.importOrLoad();
+    }
+
+    /**
+     * Tears down the executor instance each test.
+     */
+    @After
+    public void tearDown() {
+        executor.shutdown();
     }
 
     /**
@@ -87,7 +97,7 @@ public class TSLTests {
      * Test invalid profiles.
      */
     @Test
-    public void invalidProfile() {
+    public void testCase1() {
         GHRequest request = new GHRequest(52.5, 13.4, 52.6, 13.5)
                 .setProfile("bike");
 
@@ -100,7 +110,7 @@ public class TSLTests {
      * Test invalid coordinates.
      */
     @Test
-    public void invalidCoordinates() {
+    public void testCase2() {
         GHRequest request = new GHRequest(999.0, 999.0, 52.6, 13.5);
 
         GHResponse response = hopper.route(request);
@@ -112,7 +122,7 @@ public class TSLTests {
      * Test missing graph data.
      */
     @Test
-    public void missingGraphData() {
+    public void testCase3() {
         GraphHopper missingDataHopper = new GraphHopper()
                 .setGraphHopperLocation("test")
                 .setOSMFile("path/to/missing/file.osm")
@@ -133,7 +143,7 @@ public class TSLTests {
      * Test corrupted graph data.
      */
     @Test
-    public void corruptedGraphData() {
+    public void testCase4() {
         GraphHopper corruptedDataHopper = new GraphHopper()
                 .setGraphHopperLocation("test")
                 .setOSMFile("path/to/corrupted/file.osm")
@@ -154,7 +164,7 @@ public class TSLTests {
      * Test unsupported output format.
      */
     @Test
-    public void unsupportedOutputFormat() {
+    public void testCase5() {
         GHRequest request = new GHRequest(52.5, 13.4, 52.6, 13.5)
                 .setProfile("car");
 
@@ -178,7 +188,7 @@ public class TSLTests {
      * Test disconnected road network.
      */
     @Test
-    public void disconnectedRoadNetwork() {
+    public void testCase6() {
         GHRequest request = new GHRequest(52.5, 13.4, 53.0, 14.0);
 
         GHResponse response = hopper.route(request);
@@ -190,7 +200,7 @@ public class TSLTests {
      * Test private roads.
      */
     @Test
-    public void privateRoads() {
+    public void testCase7() {
         // Use a request that targets a private road
         GHRequest request = new GHRequest(52.5, 13.4, 52.55, 13.45);
 
@@ -203,7 +213,7 @@ public class TSLTests {
      * Test invalid input conditions.
      */
     @Test
-    public void invalidInput() {
+    public void testCase8() {
         GHRequest request = new GHRequest(52.5, 13.4, 52.5, 13.4)
                 .setProfile("car");
 
@@ -216,7 +226,7 @@ public class TSLTests {
      * Test partial route available.
      */
     @Test
-    public void partialRouteAvailable() {
+    public void testCase9() {
         GHRequest request = new GHRequest(52.5, 13.4, 53.0, 14.0);
 
         GHResponse response = hopper.route(request);
@@ -228,7 +238,7 @@ public class TSLTests {
      * Test no route found.
      */
     @Test
-    public void noRouteFound() {
+    public void testCase10() {
         GHRequest request = new GHRequest(999.0, 999.0, 999.1, 999.1);
 
         GHResponse response = hopper.route(request);
@@ -239,7 +249,7 @@ public class TSLTests {
      * Test Case 11: Small dataset (city-level) with restricted access.
      */
     @Test
-    public void testRoutingSmallDataset() {
+    public void testCase11() {
         GHRequest request = new GHRequest(43.5985, -116.2010, 43.6000, -116.2000) // Coordinates around Boise State University
                 .setProfile("profile");
 
@@ -251,7 +261,7 @@ public class TSLTests {
      * Test Case 12: Large dataset (country-level) with restricted access.
      */
     @Test
-    public void testRoutingLargeDataset() {
+    public void testCase12() {
         // Adjusted coordinates within the bounds
         GHRequest request = new GHRequest(43.5900, -116.2100, 43.6050, -116.1800) // Coordinates within bounds around Boise
                 .setProfile("profile");
@@ -264,7 +274,7 @@ public class TSLTests {
      * Test Case 13: High concurrency load with restricted access.
      */
     @Test
-    public void testRoutingHighConcurrencyLoad() {
+    public void testCase13() {
         GHRequest request = new GHRequest(43.5900, -116.2100, 43.6000, -116.1800) // Another route around Boise
                 .setProfile("profile");
 
@@ -276,7 +286,7 @@ public class TSLTests {
      * Test Case 14: Small dataset (city-level) with handling restricted access.
      */
     @Test
-    public void testRoutingSmallDatasetWithAccess() {
+    public void testCase14() {
         GHRequest request = new GHRequest(43.5985, -116.2010, 43.5990, -116.2005) // Short route around Boise State University
                 .setProfile("profile");
 
@@ -291,7 +301,7 @@ public class TSLTests {
      * Test Case 15: Large dataset (country-level) with handling restricted access.
      */
     @Test
-    public void testRoutingLargeDatasetWithAccess() {
+    public void testCase15() {
         // Adjusted coordinates within the bounds
         GHRequest request = new GHRequest(43.5900, -116.2100, 43.6050, -116.1800) // Route around Boise within bounds
                 .setProfile("profile");
@@ -307,7 +317,7 @@ public class TSLTests {
      * Test Case 16: High concurrency load with handling restricted access.
      */
     @Test
-    public void testRoutingHighConcurrencyLoadWithAccess() {
+    public void testCase16() {
         GHRequest request = new GHRequest(43.6050, -116.2100, 43.5900, -116.1800) // Another route around Boise
                 .setProfile("profile");
 
@@ -319,7 +329,7 @@ public class TSLTests {
      * Test Case 17: Small dataset (city-level) across different time zones.
      */
     @Test
-    public void testRoutingAcrossTimeZonesSmallDataset() {
+    public void testCase17() {
         GHRequest request = new GHRequest(43.5985, -116.2010, 43.6000, -116.1950) // Short route around Boise State University
                 .setProfile("profile");
 
@@ -331,7 +341,7 @@ public class TSLTests {
      * Test Case 18: Large dataset (country-level) across different time zones.
      */
     @Test
-    public void testRoutingAcrossTimeZonesLargeDataset() {
+    public void testCase18() {
         GHRequest request = new GHRequest(43.5881, -116.2100, 43.6090, -116.1772)
                 .setProfile("profile");
 
@@ -343,7 +353,7 @@ public class TSLTests {
      * Test Case 19: High concurrency load across different time zones.
      */
     @Test
-    public void testRoutingAcrossTimeZonesHighConcurrency() {
+    public void testCase19() {
         // Adjusted coordinates within the bounds
         GHRequest request = new GHRequest(43.5900, -116.2100, 43.6080, -116.1800) // Route around Boise within bounds
                 .setProfile("profile");
@@ -356,7 +366,7 @@ public class TSLTests {
      * Test Case 20: Small dataset (city-level) with handling one-way streets.
      */
     @Test
-    public void testRoutingOneWayStreetsSmallDataset() {
+    public void testCase20() {
         GHRequest request = new GHRequest(43.5985, -116.2010, 43.5990, -116.2020) // Short route around Boise State University
                 .setProfile("profile");
 
@@ -368,7 +378,7 @@ public class TSLTests {
      * Test Case 21: Large dataset (country-level) with handling one-way streets.
      */
     @Test
-    public void testRoutingOneWayStreetsLargeDataset() {
+    public void testCase21() {
         GHRequest request = new GHRequest(43.5900, -116.2100, 43.6050, -116.1800)
                 .setProfile("profile");
 
@@ -380,7 +390,7 @@ public class TSLTests {
      * Test Case 22: High concurrency load with handling one-way streets
      */
     @Test
-    public void testRoutingOneWayStreetsHighConcurrency() {
+    public void testCase22() {
         GHRequest request = new GHRequest(43.5900, -116.2100, 43.6080, -116.1800) // Route around Boise within bounds
                 .setProfile("profile");
 
@@ -392,7 +402,7 @@ public class TSLTests {
      * Test Case 23: Small Dataset (city-level) routing over bridges/tunnels
      */
     @Test
-    public void testRoutingBridgesSmallDataset() {
+    public void testCase23() {
         GHRequest request = new GHRequest(43.6317, -116.2386, 43.6581, -116.2780)
                 .setProfile("profile");
 
@@ -404,7 +414,7 @@ public class TSLTests {
      * Test Case 24: Large Dataset (country-level) routing with over bridges/tunnels
      */
     @Test
-    public void testRoutingBridgesLargeDataset() {
+    public void testCase24() {
         GHRequest request = new GHRequest(47.6667, -116.7400, 47.3967, -115.6689)
                 .setProfile("profile");
 
@@ -416,7 +426,7 @@ public class TSLTests {
      * Test Case 25: High Concurrency load over bridges/tunnels
      */
     @Test
-    public void testRoutingBridgesHighConcurrency() {
+    public void testCase25() {
         GHRequest request = new GHRequest(43.5895, -116.2537, 43.5896, -116.2035)
                 .setProfile("profile");
 
@@ -428,7 +438,7 @@ public class TSLTests {
      * Test Case 26: Small dataset (city-level) with alternative routes enabled
      */
     @Test
-    public void testAlternateRoutingSmallDataset() {
+    public void testCase26() {
         GHRequest request = new GHRequest(43.5985, -116.2010, 43.6000, -116.2000) // Coordinates around Boise State University
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -441,7 +451,7 @@ public class TSLTests {
      * Test Case 27: Large dataset (country-level) with alternative routes enabled
      */
     @Test
-    public void testAlternateRoutingLargeDataset() {
+    public void testCase27() {
         GHRequest request = new GHRequest(43.5900, -116.2100, 43.6050, -116.1800) // Route around Boise within bounds
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -454,7 +464,7 @@ public class TSLTests {
      * Test Case 28: High concurrency load with alternative routes
      */
     @Test
-    public void testAlternateRoutingHighConcurrency() {
+    public void testCase28() {
         GHRequest request = new GHRequest(43.6050, -116.2100, 43.5900, -116.1800)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -464,14 +474,92 @@ public class TSLTests {
     }
 
     /**
-     * Test Cases 29,30,31: Seems to be an error with test generation
+     * Test Case 29: Car routing with alternative routes enabled, using valid OSM data
+     * in a small dataset (city-level, Boise, ID).
      */
+    @Test
+    public void testCase29() {
+        GHRequest request = new GHRequest(
+                43.6158, -116.2016,   // Downtown Boise
+                43.6050, -116.1980    // Southeast Boise
+        ).setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+
+        System.out.println("Errors (if any): " + response.getErrors());
+        assertFalse("Expected valid car route in Boise city-level dataset", response.hasErrors());
+        assertFalse("Expected at least one route path", response.getAll().isEmpty());
+        assertTrue("Expected JSON-serializable response", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 30: Large dataset (country-level) car routing with alternative routes enabled
+     */
+    @Test
+    public void testCase30() {
+        GHRequest request = new GHRequest(43.6187, -116.2146, 46.8721, -113.9940) // Boise to Missoula
+                .setProfile("profile")
+                .setAlgorithm("alternative_route");
+
+        GHResponse response = hopper.route(request);
+        assertFalse("Expected valid response for large dataset with alternative routes (car)", response.hasErrors());
+    }
+
+    /**
+     * Test Case 31: Car routing with alternative routes enabled, under high concurrency load
+     * using city-level dataset (Boise, ID).
+     */
+    @Test
+    public void testCase31() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6158, -116.2016), // Boise Downtown
+                new GHPoint(43.6000, -116.2050), // Boise Bench
+                new GHPoint(43.5800, -116.2100)  // Boise South
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segment = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(segment)
+                        .setProfile("profile")
+                        .setAlgorithm("alternative_route");
+
+                GHResponse response = hopper.route(request);
+
+                if (response.hasErrors()) {
+                    System.err.println("Routing error (segment " + startIdx + " → " + endIdx + "): " + response.getErrors());
+                }
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertNotNull("Expected non-null response", response);
+                assertFalse("Expected path in response", response.getAll().isEmpty());
+                assertTrue("Expected JSON-convertible response", convertToJSON(response));
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
 
     /**
      * Test Case 32: Small dataset (city-level) routing across time zones with alternative routing
      */
     @Test
-    public void testAlternateRoutingSmallDatasetTimezones() {
+    public void testCase32() {
         GHRequest request = new GHRequest(44.0770, -116.9430, 44.0775, -116.9335)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -484,7 +572,7 @@ public class TSLTests {
      * Test Case 33: Large dataset (country-level) routing across time zones with alternative routing
      */
     @Test
-    public void testAlternateRoutingLargeDatasetTimezones() {
+    public void testCase33() {
         GHRequest request = new GHRequest(43.8765, -116.9940, 44.0070, -116.9225)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -497,7 +585,7 @@ public class TSLTests {
      * Test Case 34: High concurrency dataset routing across time zones with alternative routes
      */
     @Test
-    public void testAlternateRoutingHighConcurrencyTimezones() {
+    public void testCase34() {
         GHRequest request = new GHRequest(44.0266, -116.9612, 44.0070, -116.9225)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -510,7 +598,7 @@ public class TSLTests {
      * Test Case 35: Small dataset (city-level) routing handling one-way streets
      */
     @Test
-    public void testAlternateRoutingSmallDatasetOneWay() {
+    public void testCase35() {
         GHRequest request = new GHRequest(43.6150, -116.2023, 43.6205, -116.2107)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -523,7 +611,7 @@ public class TSLTests {
      * Test Case 36: Large dataset (country-level) routing handling one-way streets
      */
     @Test
-    public void testAlternateRoutingLargeDatasetOneWay() {
+    public void testCase36() {
         GHRequest request = new GHRequest(43.6005, -116.1950, 43.6500, -116.2500)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -536,7 +624,7 @@ public class TSLTests {
      * Test Case 37: High concurrency dataset routing handling one-way streets
      */
     @Test
-    public void testAlternateRoutingHighConcurrencyOneWay() {
+    public void testCase37() {
         GHRequest request = new GHRequest(43.6100, -116.1800, 43.6400, -116.2200)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -549,7 +637,7 @@ public class TSLTests {
      * Test Case 38: Small dataset (city-level) routing over bridges/tunnels
      */
     @Test
-    public void testAlternateRoutingSmallDatasetBridges() {
+    public void testCase38() {
         GHRequest request = new GHRequest(43.6178, -116.1996, 43.6317, -116.2386)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -562,7 +650,7 @@ public class TSLTests {
      * Test Case 39: Large dataset (country-level) routing over bridges/tunnels
      */
     @Test
-    public void testAlternateRoutingLargeDatasetBridges() {
+    public void testCase39() {
         GHRequest request = new GHRequest(43.5895, -116.2537, 43.6581, -116.2780)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -575,7 +663,7 @@ public class TSLTests {
      * Test Case 40: High concurrency dataset routing over bridges/tunnels
      */
     @Test
-    public void testAlternateRoutingHighConcurrencyBridges() {
+    public void testCase40() {
         GHRequest request = new GHRequest(43.5896, -116.2035, 43.6500, -116.2500)
                 .setProfile("profile")
                 .setAlgorithm("alternative_route");
@@ -588,7 +676,7 @@ public class TSLTests {
      * Test Case 41: Small dataset (city-level) with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysCityLevel() {
+    public void testCase41() {
         GHRequest request = new GHRequest(43.6031, -116.2075, 43.5644, -116.2228) // Boise State University to Boise Airport
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -602,7 +690,7 @@ public class TSLTests {
      * Test Case 42: Large dataset (country-level) with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysLargeDataset() {
+    public void testCase42() {
         GHRequest request = new GHRequest(47.6588, -117.4260, 42.8713, -112.4455) // Spokane to Pocatello
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -616,7 +704,7 @@ public class TSLTests {
      * Test Case 43: High concurrency load with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysHighConcurrency() {
+    public void testCase43() {
         GHRequest request = new GHRequest(43.4917, -112.0331, 45.9584, -112.5325) // Idaho Falls, ID to Butte, MT
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -630,7 +718,7 @@ public class TSLTests {
      * Test Case 44: Small dataset (city-level) with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysCityLevelBoise() {
+    public void testCase44() {
         GHRequest request = new GHRequest(43.5644, -116.2228, 43.6007, -116.1996) // Boise Airport to BSU CS Building
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -644,7 +732,7 @@ public class TSLTests {
      * Test Case 45: Large dataset (country-level) with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysLargeDatasetOntarioToHelena() {
+    public void testCase45() {
         GHRequest request = new GHRequest(44.0266, -116.9629, 46.5891, -112.0391) // Ontario, OR to Helena, MT
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -658,7 +746,7 @@ public class TSLTests {
      * Test Case 46: High concurrency load with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysHighConcurrencySpokaneHelena() {
+    public void testCase46() {
         GHRequest request = new GHRequest(47.6588, -117.4260, 46.8787, -112.4808) // Spokane, WA to Helena, MT
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -672,7 +760,7 @@ public class TSLTests {
      * Test Case 47: Routing across different time zones with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysTimeZones() {
+    public void testCase47() {
         GHRequest request = new GHRequest(43.6075, -116.2018, 43.6254, -116.1220) // Boise State University CS building to Lucky Peak Park
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -686,7 +774,7 @@ public class TSLTests {
      * Test Case 48: Routing across different time zones with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysTimeZonesLargeDataset() {
+    public void testCase48() {
         GHRequest request = new GHRequest(47.6588, -117.4260, 43.4666, -112.0330) // Spokane, Washington to Idaho Falls, Idaho
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -700,7 +788,7 @@ public class TSLTests {
      * Test Case 49: Routing across different time zones with avoiding highways.
      */
     @Test
-    public void testRouteAvoidHighwaysTimeZonesHighConcurrencyLoad() {
+    public void testCase49() {
         GHRequest request = new GHRequest(47.6588, -117.4260, 41.5890, -109.2030) // Spokane, Washington to Rock Springs, Wyoming
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -714,7 +802,7 @@ public class TSLTests {
      * Test Case 50: Handling one-way streets with avoiding highways in a small dataset (city-level).
      */
     @Test
-    public void testRouteAvoidHighwaysOneWayStreetsSmallDataset() {
+    public void testCase50() {
         GHRequest request = new GHRequest(43.6560, -112.0260, 43.6177, -116.1701) // Idaho State Correctional Center to Idaho State Capitol Building
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -728,7 +816,7 @@ public class TSLTests {
      * Test Case 51: Handling one-way streets with avoiding highways in a large dataset (country-level).
      */
     @Test
-    public void testRouteAvoidHighwaysOneWayStreetsLargeDataset() {
+    public void testCase51() {
         GHRequest request = new GHRequest(41.5868, -109.2029, 44.0650, -116.9633) // Rock Springs, Wyoming to Ontario, Oregon
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -742,7 +830,7 @@ public class TSLTests {
      * Test Case 52: Handling one-way streets with avoiding highways and high concurrency load in a city-level dataset.
      */
     @Test
-    public void testRouteAvoidHighwaysOneWayStreetsHighConcurrencyLoad() {
+    public void testCase52() {
         GHRequest request = new GHRequest(43.6135, -116.2009, 43.6125, -116.1990) // Around downtown Boise
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -756,7 +844,7 @@ public class TSLTests {
      * Test Case 53: Routing over bridges/tunnels with avoiding highways and small dataset (city-level).
      */
     @Test
-    public void testRouteAvoidHighwaysBridgesTunnelsSmallDataset() {
+    public void testCase53() {
         GHRequest request = new GHRequest(43.5646, -116.2223, 43.6163, -116.2347) // Boise Airport to Mongolian BBQ location
                 .setProfile("profile") // Routing profile for car
                 .putHint("avoid", "highways"); // Avoid highways option
@@ -770,7 +858,7 @@ public class TSLTests {
      * Test Case 54: Routing over bridges/tunnels with avoiding highways and large dataset (country-level).
      */
     @Test
-    public void testRouteAvoidHighwaysBridgesTunnelsLargeDataset() {
+    public void testCase54() {
         GHRequest request = new GHRequest(45.6760, -111.0429, 42.8713, -112.4455) // Bozeman, MT to Pocatello, ID
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -784,7 +872,7 @@ public class TSLTests {
      * Test Case 55: Routing over bridges/tunnels with avoiding highways and high concurrency load.
      */
     @Test
-    public void testRouteAvoidHighwaysBridgesTunnelsHighConcurrency() {
+    public void testCase55() {
         GHRequest request = new GHRequest(43.615, -116.2023, 42.562, -114.4606) // Boise, ID to Twin Falls, ID
                 .setProfile("profile")
                 .putHint("avoid", "highways");
@@ -798,7 +886,7 @@ public class TSLTests {
      * Test Case 56: Routing with multiple waypoints using the fastest route across a small dataset (city-level).
      */
     @Test
-    public void testRouteMultipleWaypointsFastestRouteCityLevel() {
+    public void testCase56() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Boise, Idaho (starting point)
                 new GHPoint(43.618, -116.211),  // Boise City Hall (waypoint 1)
@@ -818,7 +906,7 @@ public class TSLTests {
      * Test Case 57: Routing with multiple waypoints using the fastest route across a large dataset (country-level).
      */
     @Test
-    public void testRouteMultipleWaypointsFastestRouteLargeDataset() {
+    public void testCase57() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Boise, Idaho
                 new GHPoint(44.95, -110.681),  // Near Yellowstone, Wyoming
@@ -838,7 +926,7 @@ public class TSLTests {
      * Test Case 58: Routing with multiple waypoints using the fastest route, simulating high concurrency load.
      */
     @Test
-    public void testRouteMultipleWaypointsFastestRouteHighConcurrency() {
+    public void testCase58() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Boise, Idaho (starting point)
                 new GHPoint(44.05, -116.59),    // Mountain Home, Idaho (waypoint 1)
@@ -859,7 +947,7 @@ public class TSLTests {
      * Test Case 59: Routing with multiple waypoints in Boise, Idaho (small dataset, city-level).
      */
     @Test
-    public void testRouteMultipleWaypointsFastestRouteSmallDataset() {
+    public void testCase59() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Boise State University (starting point)
                 new GHPoint(43.564, -116.223),  // Boise Airport (waypoint 1)
@@ -880,7 +968,7 @@ public class TSLTests {
      * Test Case 60: Routing with multiple waypoints across Idaho and Montana (large dataset, country-level).
      */
     @Test
-    public void testRouteMultipleWaypointsFastestRouteLargeDatasetIdahoMontana() {
+    public void testCase60() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6176, -116.1997), // Boise, Idaho (starting point)
                 new GHPoint(42.9057, -112.4523), // Idaho Falls, Idaho (waypoint 1)
@@ -898,14 +986,61 @@ public class TSLTests {
     }
 
     /**
-     * Test Case 61: Appears to be an error in TSL file
+     * Test Case 61: Car routing with multiple waypoints and fastest route option tested under
+     * high concurrency load using valid OSM data.
      */
+    @Test
+    public void testCase61() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6158, -116.2016), // Boise, ID
+                new GHPoint(42.5613, -114.4601), // Twin Falls, ID
+                new GHPoint(43.4917, -112.0339), // Idaho Falls, ID
+                new GHPoint(46.0038, -112.5348)  // Butte, MT
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segment = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(segment)
+                        .setProfile("profile")
+                        .setAlgorithm("dijkstra")
+                        .putHint("ch.disable", true);
+
+                GHResponse response = hopper.route(request);
+
+                if (response.hasErrors()) {
+                    System.err.println("Routing error (segment " + startIdx + " → " + endIdx + "): " + response.getErrors());
+                }
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertNotNull("Expected non-null response", response);
+                assertFalse("Expected path in response", response.getAll().isEmpty());
+                assertTrue("Expected JSON-convertible response", convertToJSON(response));
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
 
     /**
      * Test Case 62: Routing with multiple waypoints across different time zones (small dataset, city-level).
      */
     @Test
-    public void testRouteMultipleWaypointsTimezonesSmallDataset() {
+    public void testCase62() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(44.0760, -116.9330), // Start in Idaho
                 new GHPoint(44.0780, -116.9450), // Waypoint 1
@@ -925,7 +1060,7 @@ public class TSLTests {
      * Test Case 63: Routing with multiple waypoints across different time zones (large dataset, country-level).
      */
     @Test
-    public void testRouteMultipleWaypointsTimezonesLargeDataset() {
+    public void testCase63() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.8765, -116.9940), // Start in Idaho
                 new GHPoint(44.0070, -116.9225), // Waypoint 1
@@ -945,7 +1080,7 @@ public class TSLTests {
      * Test Case 64: Routing with multiple waypoints across different time zones with high concurrency.
      */
     @Test
-    public void testRouteMultipleWaypointsTimezonesHighConcurrency() {
+    public void testCase64() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(44.0266, -116.9612), // Start in Idaho
                 new GHPoint(44.0070, -116.9225), // Waypoint 1
@@ -965,7 +1100,7 @@ public class TSLTests {
      * Test Case 65: Routing with multiple waypoints handling one-way streets (small dataset, city-level).
      */
     @Test
-    public void testRouteMultipleWaypointsOneWaySmallDataset() {
+    public void testCase65() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Start in Boise
                 new GHPoint(43.564, -116.223),  // Waypoint 1
@@ -986,7 +1121,7 @@ public class TSLTests {
      * Test Case 66: Routing with multiple waypoints handling one-way streets (large dataset, country-level).
      */
     @Test
-    public void testRouteMultipleWaypointsOneWayLargeDataset() {
+    public void testCase66() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6176, -116.1997), // Boise
                 new GHPoint(42.9057, -112.4523), // Idaho Falls
@@ -1007,7 +1142,7 @@ public class TSLTests {
      * Test Case 67: Routing with multiple waypoints handling one-way streets with high concurrency.
      */
     @Test
-    public void testRouteMultipleWaypointsOneWayHighConcurrency() {
+    public void testCase67() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.614, -116.238), // Start
                 new GHPoint(43.606, -116.202), // Waypoint 1
@@ -1028,7 +1163,7 @@ public class TSLTests {
      * Test Case 68: Routing with multiple waypoints over bridges/tunnels (small dataset, city-level).
      */
     @Test
-    public void testRouteMultipleWaypointsBridgesTunnelsSmallDataset() {
+    public void testCase68() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6150, -116.2023), // Boise, ID (start)
                 new GHPoint(43.6205, -116.2100), // Waypoint near a bridge in Boise
@@ -1048,7 +1183,7 @@ public class TSLTests {
      * Test Case 69: Routing with multiple waypoints over bridges/tunnels (large dataset, country-level).
      */
     @Test
-    public void testRouteMultipleWaypointsBridgesTunnelsLargeDataset() {
+    public void testCase69() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(44.0682, -114.7420), // Stanley, ID (start)
                 new GHPoint(44.4268, -117.2160), // Bridge area in Vale, OR
@@ -1068,7 +1203,7 @@ public class TSLTests {
      * Test Case 70: Routing with multiple waypoints over bridges/tunnels (high concurrency load).
      */
     @Test
-    public void testRouteMultipleWaypointsBridgesTunnelsHighConcurrency() {
+    public void testCase70() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(44.0521, -121.3153), // Bend, OR (start)
                 new GHPoint(44.4938, -117.2790), // Snake River bridge in Ontario, OR
@@ -1091,7 +1226,7 @@ public class TSLTests {
      * Test Case 71: Routing with simulated alternative routes for multiple waypoints (city-level).
      */
     @Test
-    public void testRouteMultipleWaypointsSimulatedAlternativesCityLevelStd() {
+    public void testCase71() {
         // First segment: Boise to first waypoint
         List<GHPoint> segment1 = Arrays.asList(
                 new GHPoint(43.6150, -116.2023), // Start in Boise
@@ -1143,7 +1278,7 @@ public class TSLTests {
      * Test Case 72: Routing with simulated alternative routes for multiple waypoints (county-level).
      */
     @Test
-    public void testRouteMultipleWaypointsSimulatedAlternativesCountyLevelStd() {
+    public void testCase72() {
         // First segment: Boise to Idaho Falls
         List<GHPoint> segment1 = Arrays.asList(
                 new GHPoint(43.6150, -116.2023), // Start in Boise
@@ -1195,7 +1330,7 @@ public class TSLTests {
      * Test Case 73: Routing with simulated alternative routes for multiple waypoints with high concurrency.
      */
     @Test
-    public void testRouteMultipleWaypointsSimulatedAlternativesHighConcurrency() {
+    public void testCase73() {
         // First segment: Boise to first waypoint
         List<GHPoint> segment1 = Arrays.asList(
                 new GHPoint(43.6150, -116.2023), // Start in Boise
@@ -1244,11 +1379,105 @@ public class TSLTests {
     }
 
     /**
+     * Test Case 74: Car routing with multiple waypoints using valid OSM data
+     * in a small dataset (city-level, Boise), without alternative routes and with CH disabled.
+     */
+    @Test
+    public void testCase74() {
+        GHRequest request = new GHRequest(Arrays.asList(
+                new GHPoint(43.6158, -116.2016), // Downtown Boise
+                new GHPoint(43.6050, -116.1980), // Southeast Boise
+                new GHPoint(43.5900, -116.1950)  // South Boise
+        )).setProfile("profile")
+                .setAlgorithm("dijkstra")
+                .putHint("ch.disable", true); // ✅ disables CH for this request
+
+        GHResponse response = hopper.route(request);
+
+        assertFalse("Expected valid multi-waypoint response", response.hasErrors());
+        assertFalse("Expected at least one path", response.getAll().isEmpty());
+        assertTrue("Expected JSON-convertible response", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 75: Car routing with multiple waypoints using valid OSM data
+     * in a large dataset (country-level, Boise to Missoula), without alternative routes,
+     * and with CH disabled.
+     */
+    @Test
+    public void testCase75() {
+        GHRequest request = new GHRequest(Arrays.asList(
+                new GHPoint(43.6158, -116.2016), // Boise, ID
+                new GHPoint(44.0682, -114.7420), // Stanley, ID
+                new GHPoint(46.8721, -113.9940)  // Missoula, MT
+        )).setProfile("profile")
+                .setAlgorithm("dijkstra")
+                .putHint("ch.disable", true); // ✅ disable CH for multi-waypoint routing
+
+        GHResponse response = hopper.route(request);
+
+        assertFalse("Expected valid multi-waypoint country-level route", response.hasErrors());
+        assertFalse("Expected at least one route path", response.getAll().isEmpty());
+        assertTrue("Expected JSON-serializable response", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 76: Car routing with multiple waypoints under high concurrency load
+     * using valid OSM data (Boise to Missoula), without alternative routes and with CH disabled.
+     */
+    @Test
+    public void testCase76() throws InterruptedException {
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6158, -116.2016), // Boise, ID
+                new GHPoint(44.0682, -114.7420), // Stanley, ID
+                new GHPoint(45.9180, -113.8992), // Salmon, ID
+                new GHPoint(46.8721, -113.9940)  // Missoula, MT
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segment = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(segment)
+                        .setProfile("profile")
+                        .setAlgorithm("dijkstra")
+                        .putHint("ch.disable", true); // ✅ disables CH for concurrent routing
+
+                GHResponse response = hopper.route(request);
+
+                if (response.hasErrors()) {
+                    System.err.println("Routing error (segment " + startIdx + " → " + endIdx + "): " + response.getErrors());
+                }
+
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertNotNull("Expected non-null response", response);
+                assertFalse("Expected path in response", response.getAll().isEmpty());
+                assertTrue("Expected JSON-convertible response", convertToJSON(response));
+            } catch (ExecutionException e) {
+                fail("Exception during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
+
+    /**
      * Test Case 77: Simulated alternative routes with multiple waypoints across time zones (city-level).
      * Key = 1.1.2.1.2.1.5.1.1.
      */
     @Test
-    public void testRouteMultipleWaypointsTimezonesCityLevel() {
+    public void testCase77() {
         // Segment 1: Near Fruitland, ID to border
         List<GHPoint> segment1 = Arrays.asList(
                 new GHPoint(44.0060, -116.9160), // Fruitland, ID
@@ -1279,7 +1508,7 @@ public class TSLTests {
      * Key = 1.1.2.1.2.1.5.2.1.
      */
     @Test
-    public void testRouteMultipleWaypointsTimezonesCountryLevel() {
+    public void testCase78() {
         // Segment 1: Ontario, OR to Weiser, ID
         List<GHPoint> segment1 = Arrays.asList(
                 new GHPoint(44.0260, -116.9620), // Ontario, OR
@@ -1311,7 +1540,7 @@ public class TSLTests {
      * Key = 1.1.2.1.2.1.5.3.1.
      */
     @Test
-    public void testRouteMultipleWaypointsTimezonesHighConcurrency1() {
+    public void testCase79() {
         // Segment 1: Start near Fruitland, ID
         List<GHPoint> segment1 = Arrays.asList(
                 new GHPoint(44.0100, -116.9300),
@@ -1343,7 +1572,7 @@ public class TSLTests {
      * Key = 1.1.2.1.2.1.6.1.1.
      */
     @Test
-    public void testRouteMultipleWaypointsOneWayNearBorderCityLevel() {
+    public void testCase80() {
         // Segment 1: Start near downtown Ontario, OR
         List<GHPoint> segment1 = Arrays.asList(
                 new GHPoint(44.0210, -116.9730),
@@ -1374,7 +1603,7 @@ public class TSLTests {
      * handling one-way streets, and testing performance on a large dataset (Idaho & Montana).
      */
     @Test
-    public void testRouteMultipleWaypointsAlternativeRoutesLargeDataset() {
+    public void testCase81() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Boise, Idaho (start)
                 new GHPoint(46.591, -112.015),  // Helena, Montana (waypoint 1)
@@ -1405,7 +1634,7 @@ public class TSLTests {
      * handling one-way streets (separated into multiple segments).
      */
     @Test
-    public void testRouteMultipleWaypointsAlternativeRoutesHighConcurrency() throws InterruptedException {
+    public void testCase82() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.615, -116.2023), // Boise, Idaho (start)
                 new GHPoint(46.591, -112.015),  // Helena, Montana (waypoint 1)
@@ -1456,7 +1685,7 @@ public class TSLTests {
      * and testing performance on a small dataset (city-level).
      */
     @Test
-    public void testRouteMultipleWaypointsAlternativeRoutesSmallDataset() throws InterruptedException {
+    public void testCase83() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6009, -116.2021), // BSU Student Union Building (starting point)
                 new GHPoint(43.6050, -116.1933), // Near QDOBA Mexican Eats (Broadway Ave), Boise, Idaho (waypoint 1)
@@ -1510,7 +1739,7 @@ public class TSLTests {
      * routing over bridges/tunnels, and testing performance on a large dataset (country-level).
      */
     @Test
-    public void testRouteMultipleWaypointsAlternativeRoutesCountryLevel() throws InterruptedException {
+    public void testCase84() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.5689, -116.2207), // Starting point at Boise Airport, Boise, Idaho
                 new GHPoint(44.0274, -116.9640), // Ontario, Oregon (waypoint 1)
@@ -1564,7 +1793,7 @@ public class TSLTests {
      * routing over bridges/tunnels, and testing high concurrency load.
      */
     @Test
-    public void testRouteMultipleWaypointsAlternativeRoutesHighConcurrencyIdahoMontana() throws InterruptedException {
+    public void testCase85() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6009, -116.2021), // Starting point in Boise, Idaho
                 new GHPoint(44.0682, -112.5897), // Near Butte, Montana (waypoint 1)
@@ -1621,7 +1850,7 @@ public class TSLTests {
      * handling restricted access, and testing performance on a small dataset (city-level).
      */
     @Test
-    public void testRouteAvoidHighwaysRestrictedAccessCityLevel() throws InterruptedException {
+    public void testCase86() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6022, -116.2003), // Start Point: BSU Student Union
                 new GHPoint(43.6166, -116.2023), // Waypoint 1: Downtown Boise
@@ -1677,7 +1906,7 @@ public class TSLTests {
      * handling restricted access, and testing performance on a small dataset (country-wide).
      */
     @Test
-    public void testRouteAvoidHighwaysRestrictedAccessCityLevelCw() throws InterruptedException {
+    public void testCase87() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.5459, -116.3129), // Albertsons, South Boise, Idaho
                 new GHPoint(44.0262, -116.9630), // Ontario, Oregon
@@ -1733,7 +1962,7 @@ public class TSLTests {
      * handling restricted access, and testing performance under high concurrency load.
      */
     @Test
-    public void testRouteAvoidHighwaysWithMultipleWaypointsAndConcurrency() throws InterruptedException {
+    public void testCase88() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6022, -116.2003), // Start Point: BSU Student Union
                 new GHPoint(43.6166, -116.2023), // Waypoint 1: Downtown Boise
@@ -1781,7 +2010,7 @@ public class TSLTests {
      * testing performance on a small dataset (city-level), and handling valid input.
      */
     @Test
-    public void testRouteAvoidHighwaysWithMultipleWaypointsAndSmallDataset() throws InterruptedException {
+    public void testCase89() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6022, -116.2003), // Start Point: BSU Student Union
                 new GHPoint(43.6166, -116.2023), // Waypoint 1: Downtown Boise
@@ -1828,7 +2057,7 @@ public class TSLTests {
      * testing performance on a large dataset (country-level), and handling valid input.
      */
     @Test
-    public void testRouteAvoidHighwaysWithMultipleWaypointsAndLargeDataset() throws InterruptedException {
+    public void testCase90() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6022, -116.2003), // Start Point: Boise, Idaho (BSU Student Union)
                 new GHPoint(42.5570, -114.4685), // Waypoint 1: Twin Falls, Idaho
@@ -1871,11 +2100,11 @@ public class TSLTests {
     }
 
     /**
-     * Test Case 92: Routing with multiple waypoints between Idaho and Montana,
+     * Test Case 91: Routing with multiple waypoints between Idaho and Montana,
      * avoid highways option enabled, handling restricted access, and testing performance under high concurrency load.
      */
     @Test
-    public void testRouteAvoidHighwaysBetweenIdahoAndMontanaWithConcurrency() throws InterruptedException {
+    public void testCase91() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(47.7000, -116.7750), // Start Point: Near the Idaho-Montana border (Coeur d'Alene, ID)
                 new GHPoint(46.8610, -114.1250), // Waypoint 1: Near Lolo, Montana (U.S. Route 12)
@@ -1914,8 +2143,6 @@ public class TSLTests {
                 fail("Exception during concurrent execution: " + e.getCause());
             }
         }
-
-        executor.shutdown();
     }
 
     /**
@@ -1923,7 +2150,7 @@ public class TSLTests {
      * avoid highways option enabled, and testing performance on a small dataset (city-level).
      */
     @Test
-    public void testRouteAvoidHighwaysAcrossTimeZones() {
+    public void testCase92() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6150, -116.2020), // Start Point: Boise, Idaho (Mountain Time Zone)
                 new GHPoint(48.2765, -116.5535), // Waypoint 1: Sandpoint, Idaho (Pacific Time Zone)
@@ -1947,7 +2174,7 @@ public class TSLTests {
      * avoid highways option enabled, and testing performance on a large dataset (Idaho and Montana).
      */
     @Test
-    public void testRouteAvoidHighwaysAcrossTimeZonesLargeDataset() {
+    public void testCase93() {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6150, -116.2020), // Start Point: Boise, Idaho (Mountain Time Zone)
                 new GHPoint(48.2765, -116.5535), // Waypoint 1: Sandpoint, Idaho (Pacific Time Zone)
@@ -1971,7 +2198,7 @@ public class TSLTests {
      * avoid highways option enabled, and testing performance under high concurrency load.
      */
     @Test
-    public void testRouteAvoidHighwaysAcrossTimeZonesHighConcurrency() throws InterruptedException {
+    public void testCase94() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6150, -116.2020), // Start Point: Boise, Idaho (Mountain Time Zone)
                 new GHPoint(48.2765, -116.5535), // Waypoint 1: Sandpoint, Idaho (Pacific Time Zone)
@@ -2020,7 +2247,7 @@ public class TSLTests {
      * and handling one-way streets in a city-level dataset.
      */
     @Test
-    public void testRouteAvoidHighwaysWithOneWayStreets() throws InterruptedException {
+    public void testCase95() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6166, -116.2023), // Start Point: Downtown Boise
                 new GHPoint(43.6140, -116.1990), // Waypoint 1: Near City Hall
@@ -2068,7 +2295,7 @@ public class TSLTests {
      * and handling one-way streets in a country-level dataset.
      */
     @Test
-    public void testRouteAvoidHighwaysWithOneWayStreetsCountryLevel() throws InterruptedException {
+    public void testCase96() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6166, -116.2023), // Start Point: Downtown Boise, Idaho
                 new GHPoint(47.7000, -116.7750), // Near the Idaho-Montana border (Coeur d'Alene, ID)
@@ -2117,7 +2344,7 @@ public class TSLTests {
      * and handling one-way streets under high concurrency load.
      */
     @Test
-    public void testRouteAvoidHighwaysWithOneWayStreetsHighConcurrency() throws InterruptedException {
+    public void testCase97() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6166, -116.2023), // Start Point: Downtown Boise, Idaho
                 new GHPoint(47.7000, -116.7750), // Near the Idaho-Montana border (Coeur d'Alene, ID)
@@ -2166,7 +2393,7 @@ public class TSLTests {
      * and routing over bridges/tunnels with a small dataset (city-level).
      */
     @Test
-    public void testRouteAvoidHighwaysWithBridgesAndTunnels() throws InterruptedException {
+    public void testCase98() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6150, -116.2023), // Start Point: Downtown Boise
                 new GHPoint(43.6250, -116.2150), // Waypoint 1: Boise River (near bridge)
@@ -2215,7 +2442,7 @@ public class TSLTests {
      * and routing over bridges/tunnels with a large dataset (Idaho and Montana).
      */
     @Test
-    public void testRouteAvoidHighwaysWithBridgesAndTunnelsLargeDatasetIdahoMontana() throws InterruptedException {
+    public void testCase99() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6150, -116.2023), // Start Point: Boise, Idaho (near the Boise River and bridges)
                 new GHPoint(44.5585, -111.2887), // Waypoint 1: Idaho Falls, Idaho (near Snake River Bridge)
@@ -2264,7 +2491,7 @@ public class TSLTests {
      * and routing over bridges/tunnels with high concurrency load.
      */
     @Test
-    public void testRouteAvoidHighwaysWithBridgesAndTunnelsHighConcurrency() throws InterruptedException {
+    public void testCase100() throws InterruptedException {
         List<GHPoint> points = Arrays.asList(
                 new GHPoint(43.6150, -116.2023), // Start Point: Boise, Idaho (near Boise River and bridges)
                 new GHPoint(44.5585, -111.2887), // Waypoint 1: Idaho Falls, Idaho (near Snake River Bridge)
@@ -2313,7 +2540,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level).
      */
     @Test
-    public void testRouteBikeRestrictedAccessCityDataset() {
+    public void testCase101() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6150, -116.2023, 43.6180, -116.2050)
@@ -2330,7 +2557,7 @@ public class TSLTests {
      * using fastest route and large dataset (Montana to Idaho).
      */
     @Test
-    public void testRouteBikeRestrictedAccessCountryDataset() {
+    public void testCase102() {
         setupForBike();
 
         GHRequest request = new GHRequest(47.4980, -111.3008, 46.8772, -113.9956) // Great Falls to Missoula, MT
@@ -2347,7 +2574,7 @@ public class TSLTests {
      * restricted access scenario using fastest route and valid input.
      */
     @Test
-    public void testRouteBikeRestrictedAccessHighConcurrency() throws InterruptedException {
+    public void testCase103() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2379,7 +2606,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, southern Washington).
      */
     @Test
-    public void testRouteBikeGeometryEdgeCaseCityDataset() {
+    public void testCase104() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.2406, -119.1026, 46.2460, -119.1150) // Kennewick, WA (edge of urban area)
@@ -2396,7 +2623,7 @@ public class TSLTests {
      * using fastest route and large dataset (Montana).
      */
     @Test
-    public void testRouteBikeGeometryEdgeCaseCountryDataset() {
+    public void testCase105() {
         setupForBike();
 
         GHRequest request = new GHRequest(47.0528, -109.4707, 47.1068, -109.5207) // Lewistown, MT (rural region)
@@ -2413,7 +2640,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Montana).
      */
     @Test
-    public void testRouteBikeGeometryEdgeCaseHighConcurrency() throws InterruptedException {
+    public void testCase106() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2445,7 +2672,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, Idaho).
      */
     @Test
-    public void testRouteBikeCrossTimeZoneCityDataset() {
+    public void testCase107() {
         setupForBike();
 
         // Near the Mountain/Pacific time boundary in Idaho
@@ -2463,7 +2690,7 @@ public class TSLTests {
      * using fastest route and large dataset (Montana to Idaho).
      */
     @Test
-    public void testRouteBikeCrossTimeZoneCountryDataset() {
+    public void testCase108() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.5950, -112.0397, 44.0682, -114.7420) // Helena, MT to Stanley, ID
@@ -2480,7 +2707,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Idaho to Montana).
      */
     @Test
-    public void testRouteBikeCrossTimeZoneHighConcurrency() throws InterruptedException {
+    public void testCase109() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2512,7 +2739,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, Idaho).
      */
     @Test
-    public void testRouteBikeOneWayStreetCityDataset() {
+    public void testCase110() {
         setupForBike();
 
         // Downtown Boise has one-way streets; simulate routing across them
@@ -2530,7 +2757,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, Montana).
      */
     @Test
-    public void testRouteBikeOneWayStreetCountryDataset() {
+    public void testCase111() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.5950, -112.0397, 45.7833, -108.5007) // Helena → Billings, MT
@@ -2547,7 +2774,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Idaho).
      */
     @Test
-    public void testRouteBikeOneWayStreetHighConcurrency() throws InterruptedException {
+    public void testCase112() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2579,7 +2806,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, southern Washington).
      */
     @Test
-    public void testRouteBikeBridgesTunnelsCityDataset() {
+    public void testCase113() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.2100, -119.1050, 46.2200, -119.0900) // Kennewick to Pasco, WA over Columbia River
@@ -2596,7 +2823,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, Montana).
      */
     @Test
-    public void testRouteBikeBridgesTunnelsCountryDataset() {
+    public void testCase114() {
         setupForBike();
 
         // Missoula area: Clark Fork River bridge, city grid, known bike paths
@@ -2614,7 +2841,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Montana/Idaho).
      */
     @Test
-    public void testRouteBikeBridgesTunnelsHighConcurrency() throws InterruptedException {
+    public void testCase115() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2646,7 +2873,7 @@ public class TSLTests {
      * restricted access scenario using fastest route and small dataset (Boise, ID).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesRestrictedAccessCityDataset() {
+    public void testCase116() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6150, -116.2023, 43.6180, -116.2050) // Downtown Boise
@@ -2666,7 +2893,7 @@ public class TSLTests {
      * restricted access scenario using fastest route and large dataset (Montana).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesRestrictedAccessCountryDataset() {
+    public void testCase117() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.5950, -112.0397, 45.7833, -108.5007) // Helena to Billings, MT
@@ -2686,7 +2913,7 @@ public class TSLTests {
      * restricted access scenario under high concurrency load (Idaho).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesRestrictedAccessHighConcurrency() throws InterruptedException {
+    public void testCase118() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2721,7 +2948,7 @@ public class TSLTests {
      * geometry edge case using fastest route and small dataset (Pasco, WA).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesGeometryEdgeCaseCityDataset() {
+    public void testCase119() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.2396, -119.1015, 46.2465, -119.1132) // Edge of Pasco (disconnected grid)
@@ -2741,7 +2968,7 @@ public class TSLTests {
      * geometry edge case using fastest route and large dataset (Montana).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesGeometryEdgeCaseCountryDataset() {
+    public void testCase120() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.8722, -113.9940, 46.8772, -113.9800) // Missoula, MT — edge between city grid and trail paths
@@ -2762,7 +2989,7 @@ public class TSLTests {
      * @throws InterruptedException
      */
     @Test
-    public void testRouteBikeAlternativeRoutesHighConcurrencyGenericEdgeCase() throws InterruptedException {
+    public void testCase121() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2793,7 +3020,7 @@ public class TSLTests {
      * across time zones (small dataset)
      */
     @Test
-    public void testRouteBikeAlternativeRoutesTimezoneSmallDataset() {
+    public void testCase122() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.5650, -117.0412, 43.5710, -116.9980) // Close to time zone border in city
@@ -2811,7 +3038,7 @@ public class TSLTests {
      * across time zones (large dataset)
      */
     @Test
-    public void testRouteBikeAlternativeRoutesTimezoneCountryDataset() {
+    public void testCase123() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.5670, -117.0300, 43.7700, -116.6100) // Timezone edge: Ontario, OR to Boise, ID
@@ -2829,7 +3056,7 @@ public class TSLTests {
      * across time zones (high concurrency)
      */
     @Test
-    public void testRouteBikeAlternativeRoutesTimezoneHighConcurrency() throws InterruptedException {
+    public void testCase124() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2860,7 +3087,7 @@ public class TSLTests {
      * using one-way roads (small dataset)
      */
     @Test
-    public void testRouteBikeAlternativeRoutesOneWayStreetsCityLevel() {
+    public void testCase125() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6100, -116.9750, 43.6125, -116.9700) // City core near Caldwell, ID
@@ -2878,7 +3105,7 @@ public class TSLTests {
      * handling one-way streets on a large dataset (country-level).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesOneWayStreetsCountryLevel() {
+    public void testCase126() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6150, -116.2023, 43.6187, -116.1990) // Boise, ID
@@ -2897,7 +3124,7 @@ public class TSLTests {
      * handling one-way streets under high concurrency load.
      */
     @Test
-    public void testRouteBikeAlternativeRoutesOneWayStreetsHighConcurrency() throws InterruptedException {
+    public void testCase127() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2929,7 +3156,7 @@ public class TSLTests {
      * routing over bridges/tunnels on a small dataset (city-level).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesBridgesTunnelsCityLevel() {
+    public void testCase128() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6170, -116.1990, 43.6200, -116.1950) // Boise, ID
@@ -2948,7 +3175,7 @@ public class TSLTests {
      * routing over bridges/tunnels on a large dataset (country-level).
      */
     @Test
-    public void testRouteBikeAlternativeRoutesBridgesTunnelsCountryLevel() {
+    public void testCase129() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6150, -116.2023, 43.6200, -116.1950) // Boise, ID
@@ -2967,7 +3194,7 @@ public class TSLTests {
      * routing over bridges/tunnels under high concurrency load.
      */
     @Test
-    public void testRouteBikeAlternativeRoutesBridgesTunnelsHighConcurrency() throws InterruptedException {
+    public void testCase130() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -2999,7 +3226,7 @@ public class TSLTests {
      * restricted access scenario on a small dataset (city-level, Boise, ID).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysRestrictedAccessCityLevel() {
+    public void testCase131() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6150, -116.2023, 43.6200, -116.1950) // Boise, ID
@@ -3018,7 +3245,7 @@ public class TSLTests {
      * restricted access scenario on a large dataset (country-level, Idaho).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysRestrictedAccessCountryLevel() {
+    public void testCase132() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.4935, -112.0402, 43.6166, -116.2006) // Idaho Falls → Boise
@@ -3037,7 +3264,7 @@ public class TSLTests {
      * restricted access scenario under high concurrency load.
      */
     @Test
-    public void testRouteBikeAvoidHighwaysRestrictedAccessHighConcurrency() throws InterruptedException {
+    public void testCase133() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3065,15 +3292,100 @@ public class TSLTests {
     }
 
     /**
-     * Tests 134-136 appear to be a TSL error
+     * Test Case 134: Bike routing with avoid highways option enabled, using valid OSM data
+     * and city-level (small) dataset (Boise).
      */
+    @Test
+    public void testCase134() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(
+                43.6158, -116.2016,   // Boise Downtown
+                43.6050, -116.1980    // Southeast Boise
+        ).setProfile("bike")
+                .putHint("avoid_highways", true);
+
+        GHResponse response = hopper.route(request);
+        System.out.println("Errors: " + response.getErrors());
+        assertFalse("Expected valid bike route with avoid_highways (city-level)", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 135: Bike routing with avoid highways option enabled, using valid OSM data
+     * and country-level dataset (Boise to Missoula).
+     */
+    @Test
+    public void testCase135() {
+        setupForBike();
+
+        GHRequest request = new GHRequest(
+                43.6158, -116.2016,   // Boise, ID
+                46.8721, -113.9940    // Missoula, MT
+        ).setProfile("bike")
+                .putHint("avoid_highways", true);
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse("Expected valid long-distance bike route with avoid_highways", response.hasErrors());
+        assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+    }
+
+    /**
+     * Test Case 136: Bike routing with avoid highways enabled, under high concurrency load
+     * using valid OSM data (Boise → Stanley → Missoula)
+     */
+    @Test
+    public void testCase136() throws InterruptedException {
+        setupForBike();
+
+        List<GHPoint> points = Arrays.asList(
+                new GHPoint(43.6158, -116.2016), // Boise
+                new GHPoint(44.0682, -114.7420), // Stanley
+                new GHPoint(46.8721, -113.9940)  // Missoula
+        );
+
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future<GHResponse>> results = new ArrayList<>();
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            final int startIdx = i;
+            final int endIdx = i + 1;
+
+            List<GHPoint> segment = Arrays.asList(points.get(startIdx), points.get(endIdx));
+            results.add(executor.submit(() -> {
+                GHRequest request = new GHRequest(segment)
+                        .setProfile("bike")
+                        .putHint("avoid_highways", true);
+
+                GHResponse response = hopper.route(request);
+                if (response.hasErrors()) {
+                    System.err.println("Routing error (segment " + startIdx + " → " + endIdx + "): " + response.getErrors());
+                }
+                return response;
+            }));
+        }
+
+        for (Future<GHResponse> future : results) {
+            try {
+                GHResponse response = future.get();
+                assertNotNull("Expected non-null response", response);
+                assertFalse("Expected routing path", response.getAll().isEmpty());
+                assertTrue("Expected JSON serialization to succeed", convertToJSON(response));
+            } catch (ExecutionException e) {
+                fail("Error during concurrent execution: " + e.getCause());
+            }
+        }
+
+        executor.shutdown();
+    }
 
     /**
      * Test Case 137: Routing with bike profile and avoid highways enabled,
      * routing across different time zones on a small dataset (city-level near Ontario, OR and Fruitland, ID).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysTimeZoneCityLevel() {
+    public void testCase137() {
         setupForBike();
 
         GHRequest request = new GHRequest(44.0265, -116.9336, 44.0173, -116.9213) // Ontario, OR → Fruitland, ID
@@ -3092,7 +3404,7 @@ public class TSLTests {
      * routing across different time zones on a large dataset (country-level, ID to OR).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysTimeZoneCountryLevel() {
+    public void testCase138() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.4935, -112.0402, 44.0265, -116.9336) // Idaho Falls → Ontario, OR
@@ -3111,7 +3423,7 @@ public class TSLTests {
      * routing across different time zones under high concurrency load.
      */
     @Test
-    public void testRouteBikeAvoidHighwaysTimeZoneHighConcurrency1() throws InterruptedException {
+    public void testCase139() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3143,7 +3455,7 @@ public class TSLTests {
      * edge case handling one-way streets on a small dataset (city-level, downtown Boise, ID).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysOneWayStreetsCityLevel() {
+    public void testCase140() {
         setupForBike();
 
         GHRequest request = new GHRequest(43.6152, -116.2035, 43.6131, -116.1952) // Downtown Boise
@@ -3164,7 +3476,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, Montana).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysOneWayStreetsCountryDataset() {
+    public void testCase141() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.5950, -112.0397, 45.7833, -108.5007) // Helena → Billings, MT
@@ -3182,7 +3494,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Boise, ID).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysOneWayStreetsHighConcurrency() throws InterruptedException {
+    public void testCase142() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3215,7 +3527,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, southern Washington).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysBridgesTunnelsCityDataset() {
+    public void testCase143() {
         setupForBike();
 
         GHRequest request = new GHRequest(46.2100, -119.1050, 46.2200, -119.0900) // Bridge over Columbia River
@@ -3233,7 +3545,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, ID → MT).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysBridgesTunnelsCountryDataset() {
+    public void testCase144() {
         setupForBike();
 
         GHRequest request = new GHRequest(47.4741, -115.9243, 47.1947, -114.8912) // Wallace → Superior
@@ -3251,7 +3563,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (MT).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysBridgesTunnelsHighConcurrency() throws InterruptedException {
+    public void testCase145() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3284,7 +3596,7 @@ public class TSLTests {
      * using fastest route and small dataset (Boise, ID).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsRestrictedAccessCityDataset() {
+    public void testCase146() {
         setupForBike();
 
         List<GHPoint> points = Arrays.asList(
@@ -3306,7 +3618,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsRestrictedAccessCountryDataset() {
+    public void testCase147() {
         setupForBike();
 
         List<GHPoint> points = Arrays.asList(
@@ -3328,7 +3640,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (southern WA/ID).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsRestrictedAccessHighConcurrency() throws InterruptedException {
+    public void testCase148() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3365,7 +3677,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, Kennewick, WA).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsGeometryEdgeCaseCityDataset() {
+    public void testCase149() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(46.2100, -119.1050),
@@ -3384,7 +3696,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, Helena to Missoula, MT).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsGeometryEdgeCaseCountryDataset() {
+    public void testCase150() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(46.5950, -112.0397), // Helena, MT
@@ -3403,7 +3715,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (southern WA to ID).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsGeometryEdgeCaseHighConcurrency() throws InterruptedException {
+    public void testCase151() throws InterruptedException {
         setupForBike();
         List<Callable<Boolean>> tasks = new ArrayList<>();
         for (int i = 0; i < THREAD_COUNT; i++) {
@@ -3433,7 +3745,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, Weiser to Payette, ID).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsTimeZoneCrossCityDataset() {
+    public void testCase152() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(44.2514, -116.9692),
@@ -3452,7 +3764,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, Wallace to Superior).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsTimeZoneCrossCountryDataset() {
+    public void testCase153() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(47.4741, -115.9243),
@@ -3471,7 +3783,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Wallace to Superior).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsTimeZoneCrossHighConcurrency() throws InterruptedException {
+    public void testCase154() throws InterruptedException {
         setupForBike();
         List<Callable<Boolean>> tasks = new ArrayList<>();
         for (int i = 0; i < THREAD_COUNT; i++) {
@@ -3501,7 +3813,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, Boise, ID).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsOneWayCityDataset() {
+    public void testCase155() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(43.6150, -116.2023),
@@ -3520,7 +3832,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, Helena to Missoula).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsOneWayCountryDataset() {
+    public void testCase156() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(46.5950, -112.0397),
@@ -3539,7 +3851,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Boise, ID).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsOneWayHighConcurrency() throws InterruptedException {
+    public void testCase157() throws InterruptedException {
         setupForBike();
         List<Callable<Boolean>> tasks = new ArrayList<>();
         for (int i = 0; i < THREAD_COUNT; i++) {
@@ -3569,7 +3881,7 @@ public class TSLTests {
      * using fastest route and small dataset (city-level, Pasco, WA).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsBridgesTunnelsCityDataset() {
+    public void testCase158() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(46.2100, -119.1050),
@@ -3588,7 +3900,7 @@ public class TSLTests {
      * using fastest route and large dataset (country-level, Missoula area).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsBridgesTunnelsCountryDataset() {
+    public void testCase159() {
         setupForBike();
         GHRequest request = new GHRequest(Arrays.asList(
                 new GHPoint(46.8772, -113.9956), // Missoula downtown
@@ -3607,7 +3919,7 @@ public class TSLTests {
      * using fastest route and high concurrency load (Wallace to Superior).
      */
     @Test
-    public void testRouteBikeMultipleWaypointsBridgesTunnelsHighConcurrency() throws InterruptedException {
+    public void testCase160() throws InterruptedException {
         setupForBike();
         List<Callable<Boolean>> tasks = new ArrayList<>();
         for (int i = 0; i < THREAD_COUNT; i++) {
@@ -3633,11 +3945,399 @@ public class TSLTests {
     }
 
     /**
+     * Test case 161: Tests a bike route within Montana from Butte to Helena.
+     * Ensures a valid path is found entirely in one state (Montana).
+     */
+    @Test
+    public void testCase161() {
+        setupForBike();
+        GHRequest request = new GHRequest(46.0038, -112.5348, 46.5964, -112.0264); // Butte -> Helena
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        System.out.println(response.getErrors());
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 162: Tests a bike route within Montana from Butte to Missoula.
+     * Verifies routing between two Montana cities over a moderate distance.
+     */
+    @Test
+    public void testCase162() {
+        setupForBike();
+        GHRequest request = new GHRequest(46.0038, -112.5348, 46.8721, -113.9940); // Butte -> Missoula
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 163: Tests a bike route within Montana from Missoula to Kalispell.
+     * Ensures routing works between these two northern Montana cities.
+     */
+    @Test
+    public void testCase163() {
+        setupForBike();
+        GHRequest request = new GHRequest(46.8721, -113.9940, 48.1978, -114.3135); // Missoula -> Kalispell
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 164: Tests a bike route within Idaho from Boise to Lewiston.
+     * Verifies a long north-south route can be found entirely in Idaho.
+     */
+    @Test
+    public void testCase164() {
+        setupForBike();
+        GHRequest request = new GHRequest(43.6158, -116.2016, 46.4167, -117.0177); // Boise -> Lewiston
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 165: Tests a bike route from Lewiston, Idaho to Spokane, Washington.
+     * Ensures a cross-border route (Idaho to Washington) is found successfully.
+     */
+    @Test
+    public void testCase165() {
+        setupForBike();
+        GHRequest request = new GHRequest(46.4167, -117.0177, 47.6589, -117.4250); // Lewiston -> Spokane
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 166: Tests a bike route from Boise, Idaho to Spokane, Washington.
+     * Verifies a long cross-state route from southwestern Idaho to eastern Washington.
+     */
+    @Test
+    public void testCase166() {
+        setupForBike();
+        GHRequest request = new GHRequest(43.6158, -116.2016, 47.6589, -117.4250); // Boise -> Spokane
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 167: Tests a bike route from Lewiston, Idaho to Missoula, Montana.
+     * Ensures routing works across the Idaho-Montana border through mountainous terrain.
+     */
+    @Test
+    public void testCase167() {
+        setupForBike();
+        GHRequest request = new GHRequest(46.4167, -117.0177, 46.8721, -113.9940); // Lewiston -> Missoula
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 168: Tests a bike route from Boise, Idaho to Missoula, Montana.
+     * Verifies a cross-state route from Idaho into western Montana can be found.
+     */
+    @Test
+    public void testCase168() {
+        setupForBike();
+        GHRequest request = new GHRequest(43.6158, -116.2016, 46.8721, -113.9940); // Boise -> Missoula
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 169: Tests a bike route from Spokane, Washington to Missoula, Montana.
+     * This route spans three states (WA -> ID -> MT) and verifies multi-state routing.
+     */
+    @Test
+    public void testCase169() {
+        setupForBike();
+        GHRequest request = new GHRequest(47.6589, -117.4250, 46.8721, -113.9940); // Spokane -> Missoula
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 170: Tests a bike route from Butte, Montana to Spokane, Washington.
+     * Ensures a long route from Montana to Washington (via Idaho) is calculated correctly.
+     */
+    @Test
+    public void testCase170() {
+        setupForBike();
+        GHRequest request = new GHRequest(46.0038, -112.5348, 47.6589, -117.4250); // Butte -> Spokane
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 171: Tests a long bike route from Helena, Montana to Boise, Idaho.
+     * Verifies routing over a large distance across the Montana-Idaho border.
+     */
+    @Test
+    public void testCase171() {
+        setupForBike();
+        GHRequest request = new GHRequest(46.5964, -112.0264, 43.6158, -116.2016); // Helena -> Boise
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 172: Tests a long bike route from Boise, Idaho to Kalispell, Montana.
+     * Ensures the routing engine finds a path connecting the southwest of the region to the far north.
+     */
+    @Test
+    public void testCase172() {
+        setupForBike();
+        GHRequest request = new GHRequest(43.6158, -116.2016, 48.1978, -114.3135); // Boise -> Kalispell
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 173: Tests a bike route from Kalispell, Montana to Spokane, Washington.
+     * Verifies a multi-state route from Montana to Washington via the Idaho panhandle.
+     */
+    @Test
+    public void testCase173() {
+        setupForBike();
+        GHRequest request = new GHRequest(48.1978, -114.3135, 47.6589, -117.4250); // Kalispell -> Spokane
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 174: Tests routing with an intermediate stop (via point).
+     * Verifies a multi-point bike route from Spokane to Helena with a stop in Missoula.
+     */
+    @Test
+    public void testCase174() {
+        setupForBike();
+        GHRequest request = new GHRequest();
+        request.addPoint(new GHPoint(47.6589, -117.4250)); // Spokane
+        request.addPoint(new GHPoint(46.8721, -113.9940)); // Missoula (via)
+        request.addPoint(new GHPoint(46.5964, -112.0264)); // Helena
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 175: Tests routing with multiple stops across the region.
+     * Verifies a complex bike route from Boise to Spokane via Missoula and Kalispell.
+     */
+    @Test
+    public void testCase175() {
+        setupForBike();
+        GHRequest request = new GHRequest();
+        request.addPoint(new GHPoint(43.6158, -116.2016)); // Boise
+        request.addPoint(new GHPoint(46.8721, -113.9940)); // Missoula (via)
+        request.addPoint(new GHPoint(48.1978, -114.3135)); // Kalispell (via)
+        request.addPoint(new GHPoint(47.6589, -117.4250)); // Spokane
+        request.setProfile("bike");
+
+        GHResponse response = hopper.route(request);
+        assertFalse(response.hasErrors());
+        assertTrue(convertToJSON(response));
+    }
+
+    /**
+     * Test case 176: Simulates concurrent routing requests on the same route.
+     * Uses 4 threads concurrently routing from Boise, ID to Spokane, WA.
+     */
+    @Test
+    public void testCase176() throws Exception {
+        setupForBike();
+        final int THREAD_COUNT = 4;
+        final double latFrom = 43.6158, lonFrom = -116.2016;
+        final double latTo = 47.6589, lonTo = -117.4250;
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest req = new GHRequest(latFrom, lonFrom, latTo, lonTo); // Boise -> Spokane
+                req.setProfile("bike");
+
+                GHResponse res = hopper.route(req);
+                return !res.hasErrors() && convertToJSON(res);
+            });
+        }
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        executor.shutdown();
+        for (Future<Boolean> f : results) {
+            assertTrue(f.get());
+        }
+    }
+
+    /**
+     * Test case 177: Simulates concurrent routing requests on different routes.
+     * Uses 8 threads, alternating between Boise->Spokane and Missoula->Helena routes.
+     */
+    @Test
+    public void testCase177() throws Exception {
+        setupForBike();
+        final int THREAD_COUNT = 8;
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest req;
+                // Alternate between two routes: Boise->Spokane and Missoula->Helena
+                if (Thread.currentThread().getId() % 2 == 0) {
+                    req = new GHRequest(43.6158, -116.2016, 47.6589, -117.4250); // Boise -> Spokane
+                    req.setProfile("bike");
+                } else {
+                    req = new GHRequest(46.8721, -113.9940, 46.5964, -112.0264); // Missoula -> Helena
+                    req.setProfile("bike");
+                }
+                GHResponse res = hopper.route(req);
+                return !res.hasErrors() && convertToJSON(res);
+            });
+        }
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        executor.shutdown();
+        for (Future<Boolean> f : results) {
+            assertTrue(f.get());
+        }
+    }
+
+    /**
+     * Test case 178: Simulates high-load concurrent routing on the same route.
+     * Uses 16 threads concurrently requesting the Boise to Spokane bike route.
+     */
+    @Test
+    public void testCase178() throws Exception {
+        setupForBike();
+        final int THREAD_COUNT = 16;
+        final double latFrom = 43.6158, lonFrom = -116.2016;
+        final double latTo = 47.6589, lonTo = -117.4250;
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest req = new GHRequest(latFrom, lonFrom, latTo, lonTo); // Boise -> Spokane
+                req.setProfile("bike");
+
+                GHResponse res = hopper.route(req);
+                return !res.hasErrors() && convertToJSON(res);
+            });
+        }
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        executor.shutdown();
+        for (Future<Boolean> f : results) {
+            assertTrue(f.get());
+        }
+    }
+
+    /**
+     * Test case 179: Simulates high-load concurrent routing on multiple routes.
+     * Uses 32 threads with a mix of routes (Boise-Spokane, Missoula-Helena, Lewiston-Missoula, Butte-Helena).
+     */
+    @Test
+    public void testCase179() throws Exception {
+        setupForBike();
+        final int THREAD_COUNT = 32;
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest req;
+                int mod = (int) (Thread.currentThread().getId() % 4);
+                if (mod == 0) {
+                    req = new GHRequest(43.6158, -116.2016, 47.6589, -117.4250); // Boise -> Spokane
+                    req.setProfile("bike");
+                } else if (mod == 1) {
+                    req = new GHRequest(46.8721, -113.9940, 46.5964, -112.0264); // Missoula -> Helena
+                    req.setProfile("bike");
+                } else if (mod == 2) {
+                    req = new GHRequest(46.4167, -117.0177, 46.8721, -113.9940); // Lewiston -> Missoula
+                    req.setProfile("bike");
+                } else {
+                    req = new GHRequest(46.0038, -112.5348, 46.5964, -112.0264); // Butte -> Helena
+                    req.setProfile("bike");
+                }
+                GHResponse res = hopper.route(req);
+                return !res.hasErrors() && convertToJSON(res);
+            });
+        }
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        executor.shutdown();
+        for (Future<Boolean> f : results) {
+            assertTrue(f.get());
+        }
+    }
+
+    /**
+     * Test case 180: Simulates concurrent routing requests with multi-point routes.
+     * Uses 8 threads concurrently routing from Spokane to Helena with a via point in Missoula.
+     */
+    @Test
+    public void testCase180() throws Exception {
+        setupForBike();
+        final int THREAD_COUNT = 8;
+        ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
+        List<Callable<Boolean>> tasks = new ArrayList<>();
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            tasks.add(() -> {
+                GHRequest req = new GHRequest();
+                req.addPoint(new GHPoint(47.6589, -117.4250)); // Spokane
+                req.addPoint(new GHPoint(46.8721, -113.9940)); // Missoula (via)
+                req.addPoint(new GHPoint(46.5964, -112.0264)); // Helena
+                req.setProfile("bike");
+
+                GHResponse res = hopper.route(req);
+                return !res.hasErrors() && convertToJSON(res);
+            });
+        }
+        List<Future<Boolean>> results = executor.invokeAll(tasks);
+        executor.shutdown();
+        for (Future<Boolean> f : results) {
+            assertTrue(f.get());
+        }
+    }
+
+    /**
      * Test Case 181: Routing with multiple waypoints and geometry edge case,
      * using avoid highways option and high concurrency load (Pasco to Lewiston).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysGeometryEdgeCaseHighConcurrency() throws InterruptedException {
+    public void testCase181() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3669,7 +4369,7 @@ public class TSLTests {
      * using avoid highways and small dataset (Weiser to Payette, ID).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysTimeZoneSmallDataset() {
+    public void testCase182() {
         setupForBike();
 
         GHRequest request = new GHRequest(Arrays.asList(
@@ -3689,7 +4389,7 @@ public class TSLTests {
      * using avoid highways and large dataset (Wallace to Superior).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysTimeZoneLargeDataset() {
+    public void testCase183() {
         setupForBike();
 
         GHRequest request = new GHRequest(Arrays.asList(
@@ -3709,7 +4409,7 @@ public class TSLTests {
      * using avoid highways and high concurrency load (north ID to MT).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysTimeZoneHighConcurrency() throws InterruptedException {
+    public void testCase184() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3741,7 +4441,7 @@ public class TSLTests {
      * using avoid highways and small dataset (city-level, Boise, ID).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysOneWayStreetsCityDataset() {
+    public void testCase185() {
         setupForBike();
 
         GHRequest request = new GHRequest(Arrays.asList(
@@ -3761,7 +4461,7 @@ public class TSLTests {
      * using avoid highways and large dataset (Helena to Missoula, MT - within valid OSM bounds).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysOneWayStreetsCountryDatasetMontana() {
+    public void testCase186() {
         setupForBike();
 
         GHRequest request = new GHRequest(Arrays.asList(
@@ -3781,7 +4481,7 @@ public class TSLTests {
      * using avoid highways and high concurrency load (Boise, ID).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysOneWayStreetsHighConcurrencyIdaho() throws InterruptedException {
+    public void testCase187() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
@@ -3813,7 +4513,7 @@ public class TSLTests {
      * using avoid highways and small dataset (Pasco, WA).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysBridgesTunnelsCityDatasetWashington() {
+    public void testCase188() {
         setupForBike();
 
         GHRequest request = new GHRequest(Arrays.asList(
@@ -3833,7 +4533,7 @@ public class TSLTests {
      * using avoid highways and large dataset (Missoula area).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysBridgesTunnelsCountryDatasetMontana() {
+    public void testCase189() {
         setupForBike();
 
         GHRequest request = new GHRequest(Arrays.asList(
@@ -3853,7 +4553,7 @@ public class TSLTests {
      * using avoid highways and high concurrency load (Wallace to Superior).
      */
     @Test
-    public void testRouteBikeAvoidHighwaysBridgesTunnelsHighConcurrencyWallace() throws InterruptedException {
+    public void testCase190() throws InterruptedException {
         setupForBike();
 
         List<Callable<Boolean>> tasks = new ArrayList<>();
